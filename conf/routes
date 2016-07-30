@@ -4,7 +4,36 @@
 
 GET     /                           controllers.HomeController.index
 
-GET        /login        controllers.UtilisateurController.login()
+GET         /login                          controllers.HomeController.login()
+
+# Categorie
+GET         /categories                     controllers.CategorieController.reads()
+POST        /categories                     controllers.CategorieController.create()
+GET         /categories/:id                 controllers.CategorieController.read(id: Long)
+POST        /categories/:id/update          controllers.CategorieController.update(id: Long)
+GET         /categories/:id/delete          controllers.CategorieController.delete(id: Long)
+
+# Client
+GET         /clients                        controllers.ClientController.reads()
+POST        /clients                        controllers.ClientController.create()
+GET         /clients/:id                    controllers.ClientController.read(id: Long)
+POST        /clients/:id/update             controllers.ClientController.update(id: Long)
+GET         /clients/:id/delete             controllers.ClientController.delete(id: Long)
+
+# Produit
+GET         /produits                       controllers.ProduitController.reads()
+POST        /produits                       controllers.ProduitController.create()
+GET         /produits/:id                   controllers.ProduitController.read(id: Long)
+POST        /produits/:id/update            controllers.ProduitController.update(id: Long)
+GET         /produits/:id/delete            controllers.ProduitController.delete(id: Long)
+
+
+# Utilisateur
+GET         /utilisateurs                   controllers.UtilisateurController.reads()
+POST        /utilisateurs                   controllers.UtilisateurController.create()
+GET         /utilisateurs/:id               controllers.UtilisateurController.read(id: Long)
+POST        /utilisateurs/:id/update        controllers.UtilisateurController.update(id: Long)
+GET         /utilisateurs/:id/delete        controllers.UtilisateurController.delete(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

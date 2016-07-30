@@ -3,6 +3,7 @@ package controllers;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+import views.html.login;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -18,6 +19,10 @@ public class HomeController extends Controller {
      */
     public Result index() {
         return ok(index.render());
+    }
+
+    public Result login() {
+        return ok(login.render());
     }
 
 }

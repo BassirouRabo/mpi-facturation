@@ -185,12 +185,12 @@ public class Facture {
      * @param referenceFactureProforma
      * @return
      */
-    public String createBonCommande(String referenceFactureProforma) {
+    public String createBonCommande(String referenceFactureProforma, String referenceBonCommande) {
         String result;
 
         List<Facture> factures = findByReferenceFactureProforma(referenceFactureProforma);
         for (Facture facture : factures) {
-            facture.setReferenceBonCommande("BL001");
+            facture.setReferenceBonCommande(referenceBonCommande);
             result = facture.update(facture);
 
             if (result != null) {
@@ -204,12 +204,12 @@ public class Facture {
      * @param referenceFactureProforma
      * @return
      */
-    public String createFactureDefinitive(String referenceFactureProforma) {
+    public String createFactureDefinitive(String referenceFactureProforma, String referenceFactureDefinitive) {
         String result;
 
         List<Facture> factures = findByReferenceFactureProforma(referenceFactureProforma);
         for (Facture facture : factures) {
-            facture.setReferenceFactureDefinitive("FD001");
+            facture.setReferenceFactureDefinitive(referenceFactureDefinitive);
             result = facture.update(facture);
 
             if (result != null) {
