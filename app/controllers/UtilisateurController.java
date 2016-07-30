@@ -5,7 +5,7 @@ import play.mvc.Result;
 import views.html.login;
 
 
-public class Utilisateurs extends Controller {
+public class UtilisateurController extends Controller {
 
     public Result login() {
         return ok(login.render());
