@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.inject.Inject;
+import models.Categorie;
 import models.Produit;
 import play.data.Form;
 import play.data.FormFactory;
@@ -8,6 +9,7 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.GenerateRandom;
 import utils.Secured;
 import views.html.produit;
 import views.html.produitss;
@@ -19,7 +21,7 @@ public class ProduitController extends Controller {
 
     @Transactional
     public Result reads() {
-        return ok(produitss.render(new Produit().findList()));
+        return ok(produitss.render(new Produit().findList(), new Categorie().findList()));
     }
 
     @Transactional
@@ -28,7 +30,7 @@ public class ProduitController extends Controller {
         if (ProduitExiste == null) {
             return redirect(controllers.routes.ProduitController.reads());
         } else {
-            return ok(produit.render(ProduitExiste));
+            return ok(produit.render(ProduitExiste, new Categorie().findList()));
         }
     }
 
@@ -39,11 +41,12 @@ public class ProduitController extends Controller {
             flash("error", "Veuillez vérifier les données saisies");
         } else {
             Produit produit = form.get();
+            produit.setReference(new GenerateRandom().generateRandomString());
             String result = produit.create(produit);
             if (result != null) {
                 flash("error", "Ce produit existe déjà. Veuillez saisir un nouveau");
             } else {
-                flash("success", "L'produit été ajouté");
+                flash("success", "Le produit été ajouté");
             }
         }
         return redirect(controllers.routes.ProduitController.reads());
