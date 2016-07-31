@@ -77,6 +77,19 @@ public class Utilisateur {
     }
 
     /**
+     * @param telephone
+     * @param password
+     * @return
+     */
+    public Utilisateur findByTelephoneAndPassword(Long telephone, String password) {
+        try {
+            return (Utilisateur) JPA.em().createQuery("select utilisateur From Utilisateur utilisateur WHERE utilisateur.telephone = :telephone AND utilisateur.password = :password").setParameter("telephone", telephone).setParameter("password", password).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Créer une utilisateur
      *
      * @param utilisateur

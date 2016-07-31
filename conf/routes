@@ -2,9 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.HomeController.index
-
-GET         /login                          controllers.HomeController.login()
+GET         /                   controllers.HomeController.index
 
 # Categorie
 GET         /categories                     controllers.CategorieController.reads()
@@ -29,6 +27,9 @@ GET         /produits/:id/delete            controllers.ProduitController.delete
 
 
 # Utilisateur
+GET         /inscription        controllers.UtilisateurController.inscription()
+GET         /connexion          controllers.UtilisateurController.connexion()
+POST        /connexion          controllers.UtilisateurController.authentification()
 GET         /utilisateurs                   controllers.UtilisateurController.reads()
 POST        /utilisateurs                   controllers.UtilisateurController.create()
 GET         /utilisateurs/:id               controllers.UtilisateurController.read(id: Long)
