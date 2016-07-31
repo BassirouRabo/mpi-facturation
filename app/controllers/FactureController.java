@@ -1,9 +1,9 @@
 package controllers;
 
 import play.mvc.Controller;
+import play.mvc.Security;
+import utils.Secured;
 
-/**
- * Created by brabo on 7/30/16.
- */
+@Security.Authenticated(Secured.class)
 public class FactureController extends Controller {
 }

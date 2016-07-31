@@ -7,10 +7,12 @@ import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
+import utils.Secured;
 import views.html.categorie;
 import views.html.categories;
 
-
+@Security.Authenticated(Secured.class)
 public class CategorieController extends Controller {
     @Inject
     FormFactory formFactory;

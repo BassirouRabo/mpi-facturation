@@ -7,43 +7,16 @@ import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.connexion;
-import views.html.inscription;
+import play.mvc.Security;
+import utils.Secured;
 import views.html.utilisateur;
 import views.html.utilisateurs;
 
-
+@Security.Authenticated(Secured.class)
 public class UtilisateurController extends Controller {
     @Inject
     FormFactory formFactory;
 
-    public Result connexion() {
-        return ok(connexion.render());
-    }
-
-    public Result inscription() {
-        return ok(inscription.render());
-    }
-
-    @Transactional
-    public Result authentification() {
-        Form<Utilisateur> form = formFactory.form(Utilisateur.class).bindFromRequest();
-        if (form.hasErrors()) {
-            flash("error", " Error de saisie");
-            return redirect(controllers.routes.UtilisateurController.connexion());
-        } else {
-            Utilisateur login = form.get();
-            Utilisateur utilisateur = new Utilisateur().findByTelephoneAndPassword(login.getTelephone(), login.getPassword());
-
-            if (utilisateur == null) {
-                flash("error", " Email ou mot de passe incorrect. Veuillez saisir à nouveau");
-                return redirect(controllers.routes.UtilisateurController.connexion());
-            } else {
-                session("email", (utilisateur.getEmail()));
-                return redirect(controllers.routes.HomeController.index());
-            }
-        }
-    }
 
     @Transactional
     public Result reads() {
@@ -84,9 +57,10 @@ public class UtilisateurController extends Controller {
             flash("error", "Veuillez vérifier les données saisies");
         } else {
             Utilisateur utilisateur = form.get();
+            utilisateur.setId(id);
             String result = utilisateur.update(utilisateur);
             if (result != null) {
-                flash("error", "Veuillez vérifier les données saisie");
+                flash("error", "Cet utilisateur n'existe pas");
             } else {
                 flash("success", "Le résultat a été modifié");
             }
@@ -104,6 +78,5 @@ public class UtilisateurController extends Controller {
         }
         return redirect(controllers.routes.UtilisateurController.read(id));
     }
-    
     
 }

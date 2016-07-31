@@ -3,6 +3,11 @@
 # ~~~~
 
 GET         /                   controllers.HomeController.index
+GET         /connexion          controllers.HomeController.connexion()
+GET         /deconnexion        controllers.HomeController.deconnexion()
+GET         /inscription        controllers.HomeController.inscription()
+POST        /connexion          controllers.HomeController.authentification()
+
 
 # Categorie
 GET         /categories                     controllers.CategorieController.reads()
@@ -27,9 +32,6 @@ GET         /produits/:id/delete            controllers.ProduitController.delete
 
 
 # Utilisateur
-GET         /inscription        controllers.UtilisateurController.inscription()
-GET         /connexion          controllers.UtilisateurController.connexion()
-POST        /connexion          controllers.UtilisateurController.authentification()
 GET         /utilisateurs                   controllers.UtilisateurController.reads()
 POST        /utilisateurs                   controllers.UtilisateurController.create()
 GET         /utilisateurs/:id               controllers.UtilisateurController.read(id: Long)

@@ -7,10 +7,12 @@ import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
+import utils.Secured;
 import views.html.client;
 import views.html.clients;
 
-
+@Security.Authenticated(Secured.class)
 public class ClientController extends Controller {
     @Inject
     FormFactory formFactory;
