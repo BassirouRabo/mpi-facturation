@@ -3,6 +3,7 @@ package controllers;
 import com.google.inject.Inject;
 import models.Client;
 import models.Facture;
+import models.Produit;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.jpa.Transactional;
@@ -59,11 +60,12 @@ public class FactureController extends Controller {
     public Result readsFactureProforma(String referenceFactureProforma) {
         List<Facture> factureList = new Facture().findListByReferenceFactureProforma(referenceFactureProforma);
         List<Client> clientList = new Client().findList();
+        List<Produit> produits = new Produit().findList();
 
-        if (factureList == null || clientList == null) {
-            return ok(facture_proformas.render(new ArrayList<>(), new ArrayList<>()));
+        if (factureList == null || clientList == null || produits == null) {
+            return ok(facture_proformas.render(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         } else {
-            return ok(facture_proformas.render(factureList, clientList));
+            return ok(facture_proformas.render(factureList, clientList, produits));
         }
     }
 
@@ -124,6 +126,35 @@ public class FactureController extends Controller {
             } else {
                 flash("success", "Le résultat a été modifié");
             }
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result create(String referenceFactureProforma) {
+        Form<Facture> form = formFactory.form(Facture.class).bindFromRequest();
+        if (form.hasErrors()) {
+            flash("error", "Veuillez vérifier les données saisies");
+        } else {
+            Facture facture = form.get();
+            facture.setReferenceFactureProforma(referenceFactureProforma);
+            String result = facture.addCommande(referenceFactureProforma, facture.getReferenceProduit(), facture.getQuantite(), session("telephone"));
+            if (result != null) {
+                flash("error", "Erreur d'ajout de la commande");
+            } else {
+                flash("success", "Le produit a été ajouté");
+            }
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result delete(String referenceFactureProforma, Long id) {
+        String result = new Facture().delete(id);
+        if (result != null) {
+            flash("error", "Erreur de suppression, veuillez réessayer");
+        } else {
+            flash("success", "Le produit a été supprimé");
         }
         return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
     }

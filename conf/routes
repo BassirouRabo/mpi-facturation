@@ -43,7 +43,9 @@ GET         /factures/initialisation                                          co
 
 GET         /factures-proformas                                               controllers.FactureController.readsFirstFactureProforma()
 GET         /factures-proformas/:referenceFactureProforma                     controllers.FactureController.readsFactureProforma(referenceFactureProforma: String)
+POST        /factures-proformas/:referenceFactureProforma                   controllers.FactureController.create(referenceFactureProforma: String)
 POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
+GET         /factures-proformas/:referenceFactureProforma/:id/delete        controllers.FactureController.delete(referenceFactureProforma: String, id: Long)
 
 GET         /bons-commandes                                                   controllers.FactureController.readsFirstBonCommande()
 GET         /bons-commandes/:referenceBonCommande                             controllers.FactureController.readsBonCommande(referenceBonCommande: String)

@@ -316,6 +316,7 @@ public class Facture {
         }
     }
 
+
     /**
      * Créer une facture
      *
@@ -330,6 +331,56 @@ public class Facture {
             result = e.toString();
         }
         return result;
+    }
+
+    /**
+     * Ajout d'un produit à une commande
+     *
+     * @param referenceFactureProforma
+     * @param quantite
+     * @return
+     */
+    public String addCommande(String referenceFactureProforma, String referenceProduit, Long quantite, String telephone) {
+        String result;
+        Facture facture = new Facture();
+        Facture factureExiste = findFirstByReferenceFactureProforma(referenceFactureProforma);
+        Produit produit = new Produit().findByReference(referenceProduit);
+
+
+        if (factureExiste == null || produit == null) {
+            return "Aucun enregistrement correspondant";
+        } else {
+            facture.setAdresse(factureExiste.getAdresse());
+            facture.setCaracteristique(produit.getCaracteristique());
+            facture.setCategorie(produit.getCategorie().getNom());
+            facture.setDelaiLivraison(factureExiste.getDelaiLivraison());
+            facture.setDesignation(produit.getDesignation());
+            facture.setEmail(factureExiste.getEmail());
+            facture.setGarantie(factureExiste.getGarantie());
+            facture.setInformation(factureExiste.getInformation());
+            facture.setModePaiement(factureExiste.getModePaiement());
+            facture.setNom(factureExiste.getNom());
+            facture.setPrixVente(produit.getPrixVente());
+            facture.setQuantite(quantite);
+            facture.setReferenceBonCommande(factureExiste.getReferenceBonCommande());
+            facture.setReferenceClient(factureExiste.getReferenceClient());
+            facture.setReferenceFactureDefinitive(factureExiste.getReferenceFactureDefinitive());
+            facture.setReferenceFactureProforma(factureExiste.getReferenceFactureProforma());
+            facture.setReferenceProduit(produit.getReference());
+            facture.setRemise(facture.getRemise());
+            facture.setTelephone(factureExiste.getTelephone());
+            facture.setValidite(factureExiste.getValidite());
+            facture.setWhenDone(new Date());
+            facture.setWhoDone(telephone);
+
+            result = create(facture);
+
+            if (result != null) {
+                return "Erreur d'enregistrement";
+            }
+        }
+
+        return null;
     }
 
     /**

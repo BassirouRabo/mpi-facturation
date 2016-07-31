@@ -65,6 +65,20 @@ public class Produit {
     }
 
     /**
+     * Retrouver une produit by reference
+     *
+     * @param reference
+     * @return
+     */
+    public Produit findByReference(String reference) {
+        try {
+            return (Produit) JPA.em().createQuery("select produit From Produit produit WHERE produit.reference = :reference").setParameter("reference", reference).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Créer une produit
      *
      * @param produit
