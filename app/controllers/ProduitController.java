@@ -8,7 +8,7 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.produit;
-import views.html.produits;
+import views.html.produitss;
 
 
 public class ProduitController extends Controller {
@@ -17,7 +17,7 @@ public class ProduitController extends Controller {
 
     @Transactional
     public Result reads() {
-        return ok(produits.render(new Produit().findList()));
+        return ok(produitss.render(new Produit().findList()));
     }
 
     @Transactional
