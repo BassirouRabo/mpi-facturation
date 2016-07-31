@@ -56,9 +56,10 @@ public class CategorieController extends Controller {
             flash("error", "Veuillez vérifier les données saisies");
         } else {
             Categorie categorie = form.get();
+            categorie.setId(id);
             String result = categorie.update(categorie);
             if (result != null) {
-                flash("error", "Veuillez vérifier les données saisie");
+                flash("error", "Erreur - Veuillez vérifier les données saisie");
             } else {
                 flash("success", "Le résultat a été modifié");
             }

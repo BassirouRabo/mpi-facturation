@@ -56,6 +56,7 @@ public class ClientController extends Controller {
             flash("error", "Veuillez vérifier les données saisies");
         } else {
             Client client = form.get();
+            client.setId(id);
             String result = client.update(client);
             if (result != null) {
                 flash("error", "Veuillez vérifier les données saisie");

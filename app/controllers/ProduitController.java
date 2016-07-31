@@ -56,6 +56,7 @@ public class ProduitController extends Controller {
             flash("error", "Veuillez vérifier les données saisies");
         } else {
             Produit produit = form.get();
+            produit.setId(id);
             String result = produit.update(produit);
             if (result != null) {
                 flash("error", "Veuillez vérifier les données saisie");
