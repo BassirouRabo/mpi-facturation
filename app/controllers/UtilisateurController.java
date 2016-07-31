@@ -12,6 +12,9 @@ import utils.Secured;
 import views.html.utilisateur;
 import views.html.utilisateurs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Security.Authenticated(Secured.class)
 public class UtilisateurController extends Controller {
     @Inject
@@ -20,7 +23,13 @@ public class UtilisateurController extends Controller {
 
     @Transactional
     public Result reads() {
-        return ok(utilisateurs.render(new Utilisateur().findList()));
+        List<Utilisateur> utilisateurList = new Utilisateur().findList();
+
+        if (utilisateurList == null) {
+            return ok(utilisateurs.render(new ArrayList<>()));
+        } else {
+            return ok(utilisateurs.render(utilisateurList));
+        }
     }
 
     @Transactional

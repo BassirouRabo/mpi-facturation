@@ -3,8 +3,11 @@ package models;
 import play.db.jpa.JPA;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "facture")
@@ -124,12 +127,51 @@ public class Facture {
     }
 
     /**
-     * Retrouver une facture by referenceFactureProforma
+     * Retrouver list facture by FactureProforma
+     * @return
+     */
+    private List<Facture> findListByFactureProforma() {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture").getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver list facture by BonCommande
+     *
+     * @return
+     */
+    private List<Facture> findListByBonCommande() {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonCommande = :referenceBonCommande").setParameter("referenceBonCommande", 0).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver list facture by FactureDefinitive
+     *
+     * @return
+     */
+    private List<Facture> findListByFactureDefinitive() {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive = :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", 0).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Retrouver list facture by referenceFactureProforma
      *
      * @param referenceFactureProforma
      * @return
      */
-    public List<Facture> findByReferenceFactureProforma(String referenceFactureProforma) {
+    public List<Facture> findListByReferenceFactureProforma(String referenceFactureProforma) {
         try {
             return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureProforma = :referenceFactureProforma").setParameter("referenceFactureProforma", referenceFactureProforma).getResultList();
         } catch (Exception e) {
@@ -138,12 +180,12 @@ public class Facture {
     }
 
     /**
-     * Retrouver une facture by referenceBonCommande
+     * Retrouver list facture by referenceBonCommande
      *
      * @param referenceBonCommande
      * @return
      */
-    public List<Facture> findByReferenceBonCommande(String referenceBonCommande) {
+    public List<Facture> findListByReferenceBonCommande(String referenceBonCommande) {
         try {
             return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonCommande = :referenceBonCommande").setParameter("referenceBonCommande", referenceBonCommande).getResultList();
         } catch (Exception e) {
@@ -152,16 +194,125 @@ public class Facture {
     }
 
     /**
-     * Retrouver une facture by referenceFactureDefinitive
+     * Retrouver list facture by referenceFactureDefinitive
      *
      * @param referenceFactureDefinitive
      * @return
      */
-    public List<Facture> findByReferenceFactureDefinitive(String referenceFactureDefinitive) {
+    public List<Facture> findListByReferenceFactureDefinitive(String referenceFactureDefinitive) {
         try {
             return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive = :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", referenceFactureDefinitive).getResultList();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * Retrouver la première facture by referenceFactureProforma
+     *
+     * @param referenceFactureProforma
+     * @return
+     */
+    private Facture findFirstByReferenceFactureProforma(String referenceFactureProforma) {
+        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
+        if (factures != null) {
+            return factures.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver la première facture by referenceBonCommande
+     *
+     * @param referenceBonCommande
+     * @return
+     */
+    private Facture findFirstByReferenceBonCommande(String referenceBonCommande) {
+        System.out.println("referenceBonCommande " + referenceBonCommande);
+        List<Facture> factures = findListByReferenceBonCommande(referenceBonCommande);
+        if (factures != null) {
+            System.out.println("factures != null id " + factures.get(0).getId());
+            return factures.get(0);
+        } else {
+            System.out.println("factures = null ");
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver la première facture by referenceFactureDefinitive
+     *
+     * @param referenceFactureDefinitive
+     * @return
+     */
+    private Facture findFirstByReferenceFactureDefinitive(String referenceFactureDefinitive) {
+        List<Facture> factures = findListByReferenceFactureDefinitive(referenceFactureDefinitive);
+        if (factures != null) {
+            return factures.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Liste des premières factures by findListFirstByFactureProforma
+     *
+     * @return
+     */
+    public List<Facture> findListFirstByFactureProforma() {
+        List<Facture> factureListOut = new ArrayList<>();
+        HashSet<Facture> factureHashSet = new HashSet<>();
+        List<Facture> factureList = findListByFactureProforma();
+
+        if (factureList == null) {
+            return null;
+        } else {
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureProforma(facture.getReferenceFactureProforma())).collect(Collectors.toList()));
+            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
+            return factureListOut;
+        }
+    }
+
+    /**
+     * Liste des premières factures by findListFirstByBonCommande
+     *
+     * @return
+     */
+    public List<Facture> findListFirstByBonCommande() {
+        List<Facture> factureListOut = new ArrayList<>();
+        HashSet<Facture> factureHashSet = new HashSet<>();
+        List<Facture> factureList = findListByBonCommande();
+
+        if (factureList == null) {
+            return null;
+        } else {
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceBonCommande(facture.getReferenceBonCommande())).collect(Collectors.toList()));
+
+            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
+
+            return factureListOut;
+        }
+    }
+
+    /**
+     * Liste des premières factures by findListFirstByFactureDefinitive
+     *
+     * @return
+     */
+    public List<Facture> findListFirstByFactureDefinitive() {
+        List<Facture> factureListOut = new ArrayList<>();
+        HashSet<Facture> factureHashSet = new HashSet<>();
+        List<Facture> factureList = findListByFactureDefinitive();
+
+        if (factureList == null) {
+            return null;
+        } else {
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureDefinitive(facture.getReferenceFactureDefinitive())).collect(Collectors.toList()));
+
+            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
+
+            return factureListOut;
         }
     }
 
@@ -188,7 +339,7 @@ public class Facture {
     public String createBonCommande(String referenceFactureProforma, String referenceBonCommande) {
         String result;
 
-        List<Facture> factures = findByReferenceFactureProforma(referenceFactureProforma);
+        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
         for (Facture facture : factures) {
             facture.setReferenceBonCommande(referenceBonCommande);
             result = facture.update(facture);
@@ -207,7 +358,7 @@ public class Facture {
     public String createFactureDefinitive(String referenceFactureProforma, String referenceFactureDefinitive) {
         String result;
 
-        List<Facture> factures = findByReferenceFactureProforma(referenceFactureProforma);
+        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
         for (Facture facture : factures) {
             facture.setReferenceFactureDefinitive(referenceFactureDefinitive);
             result = facture.update(facture);
@@ -226,12 +377,43 @@ public class Facture {
     public String modification(String referenceFactureProforma) {
         String result;
 
-        List<Facture> factures = findByReferenceFactureProforma(referenceFactureProforma);
+        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
         for (Facture facture : factures) {
             result = facture.update(facture);
 
             if (result != null) {
                 return result;
+            }
+        }
+        return null;
+    }
+
+    public String updateEntete(Facture facture) {
+        String result;
+        List<Facture> factures = findListByReferenceFactureProforma(facture.getReferenceFactureProforma());
+        Client client = new Client().findByReference(facture.getReferenceClient());
+
+        if (factures == null || client == null) {
+            return "aucun enregistrement correspondant";
+        } else {
+            for (Facture facture1 : factures) {
+                facture1.setDelaiLivraison(facture.getDelaiLivraison());
+                facture1.setGarantie(facture.getGarantie());
+                facture1.setModePaiement(facture.getModePaiement());
+                facture1.setValidite(facture.getValidite());
+                facture1.setGarantie(facture.getGarantie());
+                facture1.setReferenceClient(client.getReference());
+                facture1.setNom(client.getNom());
+                facture1.setAdresse(client.getAdresse());
+                facture1.setTelephone(client.getTelephone());
+                facture1.setEmail(client.getEmail());
+                facture1.setInformation(client.getInformation());
+
+                result = update(facture1);
+
+                if (result != null) {
+                    return "Erreur d'enregistrement";
+                }
             }
         }
         return null;
@@ -270,7 +452,7 @@ public class Facture {
     public String supprimer(String referenceFactureProforma) {
         String result;
 
-        List<Facture> factures = findByReferenceFactureProforma(referenceFactureProforma);
+        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
 
         for (Facture facture : factures) {
             result = facture.delete(facture.getId());

@@ -1,5 +1,5 @@
 @import java.util
-@(clients: util.List[Client])
+@(factures: util.List[Facture], clients: util.List[Client])
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="@routes.Assets.versioned("images/favicon.png")">
-        <title>MPI | Utilisateurs</title>
+        <title>MPI | Facture Proforma</title>
             <!-- Bootstrap Core CSS -->
         <link href="@routes.Assets.versioned("bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
             <!-- Menu CSS -->
@@ -34,7 +34,7 @@
             <div class="cssload-speeding-wheel"></div>
         </div>
         <div id="wrapper">
-                <!-- Top Navigation -->
+
             <nav class="navbar navbar-default navbar-static-top m-b-0">
                 <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
                     <div class="top-left-part"><a class="logo" href="index.html"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
@@ -43,7 +43,6 @@
                     </ul>
                 </div>
             </nav>
-
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse slimscrollsidebar">
@@ -57,11 +56,11 @@
 
                         <li> <a href="/produits" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Produits</span></a></li>
-                        <li> <a href="/clients" class="waves-effect active"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/clients" class="waves-effect"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Clients</span></a></li>
 
                         <li class="nav-small-cap m-t-10">--- Factures</li>
-                        <li> <a href="/factures-proformas" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/factures-proformas" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Proforma </span></a></li>
                         <li> <a href="/bons-commandes" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Bon de livraison </span></a></li>
@@ -83,7 +82,7 @@
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">Nos clients</h4>
+                            <h4 class="page-title">Facture proforma N° : @factures.get(0).getReferenceFactureProforma</h4>
                         </div>
                     </div>
 
@@ -103,34 +102,133 @@
                         </div>
                     </div>
 
+                    @if(factures.get(0).getReferenceClient == null) {
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="white-box">
+                                    <h3 class="box-title m-b-0">Veuillez remplir les champs ci-après</h3>
+                                    <form class="form-horizontal" method="post" action="/factures-proformas/@factures.get(0).getReferenceFactureProforma/updateEntete">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <select class="form-control" name="referenceClient">
+                                                @for(client <- clients) {
+                                                    <option value="@client.getReference">@client.getNom</option>
+                                                }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="delaiLivraison" type="text" class="form-control" placeholder="Délai de livraison" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="garantie" type="text" class="form-control" placeholder="Garantie" required="required">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="modePaiement" type="text" class="form-control" placeholder="Mode de paiement" required="required">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="validite" type="text" class="form-control" placeholder="Validité" required="required">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="remise" type="number" min="0" max="100" class="form-control" placeholder="Remise" >
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-2">
+                                                <button type="submit" class="btn btn-block btn-default">Valider</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="white-box">
+
+                                @if(factures.get(0).getReferenceClient != null) {
+                                    <ul class="nav customtab nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#client" aria-controls="client" role="tab" data-toggle="tab" aria-expanded="true"><span class="visible-xs"><i class="ti-home"></i></span><span class="hidden-xs">
+                                            Client </span></a></li>
+                                        <li role="presentation" class=""><a href="#commande" aria-controls="commande" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="ti-user"></i></span> <span class="hidden-xs">
+                                            Commande </span></a></li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade active in" id="client">
+                                            <dl>
+                                                <dt>RÉFÉRENCE</dt>
+                                                <dd>@factures.get(0).getReferenceClient</dd>
+                                                <dt>NOM</dt>
+                                                <dd>@factures.get(0).getNom</dd>
+                                                <dt>TÉLÉPHONE</dt>
+                                                <dd>@factures.get(0).getTelephone</dd>
+                                                <dt>EMAIL</dt>
+                                                <dd>@factures.get(0).getEmail</dd>
+                                                <dt>ADRESSE</dt>
+                                                <dd>@factures.get(0).getAdresse</dd>
+                                                <dt>INFORMATION</dt>
+                                                <dd>@factures.get(0).getInformation</dd>
+                                            </dl>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade" id="commande">
+                                            <dl>
+                                                <dt>DÉLAI DE LIVRAISON</dt>
+                                                <dd>@factures.get(0).getDelaiLivraison</dd>
+                                                <dt>GARANTIE</dt>
+                                                <dd>@factures.get(0).getGarantie</dd>
+                                                <dt>MODE DE PAIEMENT</dt>
+                                                <dd>@factures.get(0).getModePaiement</dd>
+                                                <dt>VALIDITE DE L'OFFRE</dt>
+                                                <dd>@factures.get(0).getValidite</dd>
+                                            </dl>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                }
+
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr class="active">
                                                 <th>Référence</th>
-                                                <th>Nom</th>
-                                                <th>Téléphone</th>
-                                                <th>Email</th>
-                                                <th>Adresse</th>
-                                                <th>Information</th>
+                                                <th>Produit</th>
+                                                <th>Client</th>
+                                                <th>Date</th>
                                                 <th class="text-nowrap">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @for(client <- clients) {
+                                        @for(facture <- factures) {
                                             <tr>
-                                                <td>@client.getReference</td>
-                                                <td>@client.getNom</td>
-                                                <td>@client.getTelephone</td>
-                                                <td>@client.getEmail</td>
-                                                <td>@client.getAdresse</td>
-                                                <td>@client.getInformation</td>
+                                                <td>@facture.getReferenceFactureProforma</td>
+                                                <td>@facture.getDesignation</td>
+                                                <td>@facture.getNom</td>
+                                                <td>
+                                                @if(facture.getWhenDone != null) {
+                                                    @facture.getWhenDone.format("dd-MM-yyyy")
+                                                }
+                                                </td>
                                                 <td class="text-nowrap">
-                                                    <a href="/clients/@client.getId" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                                    <a href="/clients/@client.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
+                                                    <a href="/factures/@facture.getId" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                    <a href="/factures/@facture.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
                                                 </td>
                                             </tr>
                                         }
@@ -141,48 +239,6 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="white-box">
-                                <h3 class="box-title m-b-0">Ajouter un nouveau client</h3>
-                                <form class="form-horizontal" method="post" action="/clients">
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="nom" type="text" class="form-control" placeholder="Nom ..." required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input type="email" name="email" class="form-control" placeholder="Email ...">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="telephone" type="tel" class="form-control" placeholder="téléphone ..." required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <textarea name="adresse" class="form-control" rows="5" placeholder="Adresse ..."></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <textarea name="information" class="form-control" rows="5" placeholder="Autres informations ..."></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-2">
-                                            <button type="submit" class="btn btn-block btn-default">Ajouter</button>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
                 <footer class="footer text-center"> 2016 &copy;

@@ -38,5 +38,18 @@ GET         /utilisateurs/:id               controllers.UtilisateurController.re
 POST        /utilisateurs/:id/update        controllers.UtilisateurController.update(id: Long)
 GET         /utilisateurs/:id/delete        controllers.UtilisateurController.delete(id: Long)
 
+# Facture
+GET         /factures/initialisation                                          controllers.FactureController.initialisation()
+
+GET         /factures-proformas                                               controllers.FactureController.readsFirstFactureProforma()
+GET         /factures-proformas/:referenceFactureProforma                     controllers.FactureController.readsFactureProforma(referenceFactureProforma: String)
+POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
+
+GET         /bons-commandes                                                   controllers.FactureController.readsFirstBonCommande()
+GET         /bons-commandes/:referenceBonCommande                             controllers.FactureController.readsBonCommande(referenceBonCommande: String)
+
+GET         /factures-definitives                                             controllers.FactureController.readsFirstFactureDefinitive()
+GET         /factures-definitives/:referenceFactureDefinitive                 controllers.FactureController.readsFactureDefinitive(referenceFactureDefinitive: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

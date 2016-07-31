@@ -12,6 +12,9 @@ import utils.Secured;
 import views.html.categorie;
 import views.html.categories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Security.Authenticated(Secured.class)
 public class CategorieController extends Controller {
     @Inject
@@ -19,7 +22,14 @@ public class CategorieController extends Controller {
 
     @Transactional
     public Result reads() {
-        return ok(categories.render(new Categorie().findList()));
+        List<Categorie> categorieList = new Categorie().findList();
+
+        if(categorieList == null) {
+            return ok(categories.render(new ArrayList<>()));
+        } else {
+            return ok(categories.render(categorieList));
+        }
+
     }
 
     @Transactional

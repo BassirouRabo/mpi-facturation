@@ -13,6 +13,9 @@ import utils.Secured;
 import views.html.client;
 import views.html.clients;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Security.Authenticated(Secured.class)
 public class ClientController extends Controller {
     @Inject
@@ -20,7 +23,13 @@ public class ClientController extends Controller {
 
     @Transactional
     public Result reads() {
-        return ok(clients.render(new Client().findList()));
+        List<Client> clientList = new Client().findList();
+
+        if (clientList == null) {
+            return ok(clients.render(new ArrayList<>()));
+        } else {
+            return ok(clients.render(clientList));
+        }
     }
 
     @Transactional

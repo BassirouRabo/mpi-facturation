@@ -14,6 +14,9 @@ import utils.Secured;
 import views.html.produit;
 import views.html.produitss;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Security.Authenticated(Secured.class)
 public class ProduitController extends Controller {
     @Inject
@@ -21,7 +24,14 @@ public class ProduitController extends Controller {
 
     @Transactional
     public Result reads() {
-        return ok(produitss.render(new Produit().findList(), new Categorie().findList()));
+        List<Produit> produitList = new Produit().findList();
+        List<Categorie> categories = new Categorie().findList();
+
+        if (produitList == null || categories == null) {
+            return ok(produitss.render(new ArrayList<>(), new ArrayList<>()));
+        } else {
+            return ok(produitss.render(produitList, categories));
+        }
     }
 
     @Transactional
