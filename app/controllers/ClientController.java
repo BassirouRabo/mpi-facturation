@@ -8,6 +8,7 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.GenerateRandom;
 import utils.Secured;
 import views.html.client;
 import views.html.clients;
@@ -39,6 +40,7 @@ public class ClientController extends Controller {
             flash("error", "Veuillez vérifier les données saisies");
         } else {
             Client client = form.get();
+            client.setReference(new GenerateRandom().generateRandomString());
             String result = client.create(client);
             if (result != null) {
                 flash("error", "Ce client existe déjà. Veuillez saisir un nouveau");
