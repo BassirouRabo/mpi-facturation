@@ -217,8 +217,9 @@
                                                         <tr>
                                                             <th>Référence produit</th>
                                                             <th>Désignation</th>
-                                                            <th class="text-right">P.U</th>
                                                             <th class="text-right">Quantité</th>
+                                                            <th class="text-right">P.U</th>
+                                                            <th class="text-right">Prix Vente</th>
                                                             <th class="text-right">Total</th>
                                                             <th class="text-right">Action</th>
                                                         </tr>
@@ -229,8 +230,9 @@
                                                             <tr>
                                                                 <td>@facture.getReferenceProduit</td>
                                                                 <td>@facture.getDesignation</td>
-                                                                <td class="text-right">@facture.getPrixVente</td>
                                                                 <td class="text-right">@facture.getQuantite</td>
+                                                                <td class="text-right">@facture.getPrix</td>
+                                                                <td class="text-right">@facture.getPrixVente</td>
                                                                 <td class="text-right">@(facture.getPrixVente * facture.getQuantite)</td>
                                                                 <td class="text-right text-nowrap">
                                                                     <a href="/factures-proformas/@facture.getReferenceFactureProforma/@facture.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
@@ -280,6 +282,7 @@
                                                 <th>Catégorie</th>
                                                 <th>Désignation</th>
                                                 <th>Caractéristique</th>
+                                                <th>P.U</th>
                                                 <th>Prix Vente</th>
                                                 <th>Quantité</th>
                                                 <th class="text-nowrap">Action</th>
@@ -293,7 +296,10 @@
                                                     <td>@produit.getCategorie.getNom</td>
                                                     <td>@produit.getDesignation</td>
                                                     <td>@produit.getCaracteristique</td>
-                                                    <td>@produit.getPrixVente</td>
+                                                    <td>@produit.getPrix</td>
+                                                    <td>
+                                                        <input name="prixVente" type="number" min="1" class="form-control" required="required">
+                                                    </td>
                                                     <td>
                                                         <input name="quantite" type="number" min="1" class="form-control" value="1" required="required">
                                                     </td>

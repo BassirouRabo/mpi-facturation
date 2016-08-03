@@ -20,15 +20,15 @@ public class Produit {
     private String designation;
     @Column(name = "caracteristique")
     private String caracteristique;
-    @Column(name = "prix_vente")
-    private Long prixVente;
+    @Column(name = "prix")
+    private Long prix;
 
-    public Produit(Categorie categorie, String reference, String designation, String caracteristique, Long prixVente) {
+    public Produit(Categorie categorie, String reference, String designation, String caracteristique, Long prix) {
         this.categorie = categorie;
         this.reference = reference;
         this.designation = designation;
         this.caracteristique = caracteristique;
-        this.prixVente = prixVente;
+        this.prix = prix;
     }
 
     /**
@@ -111,7 +111,7 @@ public class Produit {
             produitExiste.setReference(produit.getReference());
             produitExiste.setDesignation(produit.getDesignation());
             produitExiste.setCaracteristique(produit.getCaracteristique());
-            produitExiste.setPrixVente(produit.getPrixVente());
+            produitExiste.setPrix(produit.getPrix());
             produitExiste.setCategorie(produit.getCategorie());
             try {
                 JPA.em().persist(produitExiste);
@@ -186,11 +186,11 @@ public class Produit {
         this.caracteristique = caracteristique;
     }
 
-    public Long getPrixVente() {
-        return prixVente;
+    public Long getPrix() {
+        return prix;
     }
 
-    public void setPrixVente(Long prixVente) {
-        this.prixVente = prixVente;
+    public void setPrix(Long prix) {
+        this.prix = prix;
     }
 }

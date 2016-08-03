@@ -138,7 +138,7 @@ public class FactureController extends Controller {
         } else {
             Facture facture = form.get();
             facture.setReferenceFactureProforma(referenceFactureProforma);
-            String result = facture.addCommande(referenceFactureProforma, facture.getReferenceProduit(), facture.getQuantite(), session("telephone"));
+            String result = facture.addCommande(referenceFactureProforma, facture.getReferenceProduit(), facture.getPrixVente(), facture.getQuantite(), session("telephone"));
             if (result != null) {
                 flash("error", "Erreur d'ajout de la commande");
             } else {

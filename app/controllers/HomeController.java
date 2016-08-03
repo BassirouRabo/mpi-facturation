@@ -1,6 +1,5 @@
 package controllers;
 
-import com.google.inject.Inject;
 import models.Utilisateur;
 import play.data.Form;
 import play.data.FormFactory;
@@ -10,6 +9,7 @@ import play.mvc.Result;
 import views.html.connexion;
 import views.html.index;
 import views.html.inscription;
+import javax.inject.Inject;
 
 
 public class HomeController extends Controller {

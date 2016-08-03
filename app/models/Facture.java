@@ -46,6 +46,8 @@ public class Facture {
     private String designation;
     @Column(name = "caracteristique")
     private String caracteristique;
+    @Column(name = "prix")
+    private Long prix;
     @Column(name = "prix_vente")
     private Long prixVente;
 
@@ -68,7 +70,33 @@ public class Facture {
     @Column(name = "who_done")
     private String whoDone;
 
-    public Facture(String referenceFactureProforma, String referenceBonCommande, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
+    /**
+     * Constructeur avec paramètre
+     * @param referenceFactureProforma
+     * @param referenceBonCommande
+     * @param referenceFactureDefinitive
+     * @param referenceClient
+     * @param nom
+     * @param telephone
+     * @param email
+     * @param adresse
+     * @param information
+     * @param referenceProduit
+     * @param categorie
+     * @param designation
+     * @param caracteristique
+     * @param prix
+     * @param prixVente
+     * @param quantite
+     * @param delaiLivraison
+     * @param garantie
+     * @param modePaiement
+     * @param validite
+     * @param remise
+     * @param whenDone
+     * @param whoDone
+     */
+    public Facture(String referenceFactureProforma, String referenceBonCommande, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
         this.referenceFactureProforma = referenceFactureProforma;
         this.referenceBonCommande = referenceBonCommande;
         this.referenceFactureDefinitive = referenceFactureDefinitive;
@@ -82,6 +110,7 @@ public class Facture {
         this.categorie = categorie;
         this.designation = designation;
         this.caracteristique = caracteristique;
+        this.prix = prix;
         this.prixVente = prixVente;
         this.quantite = quantite;
         this.delaiLivraison = delaiLivraison;
@@ -340,7 +369,7 @@ public class Facture {
      * @param quantite
      * @return
      */
-    public String addCommande(String referenceFactureProforma, String referenceProduit, Long quantite, String telephone) {
+    public String addCommande(String referenceFactureProforma, String referenceProduit, Long prixVente, Long quantite, String telephone) {
         String result;
         Facture facture = new Facture();
         Facture factureExiste = findFirstByReferenceFactureProforma(referenceFactureProforma);
@@ -360,7 +389,8 @@ public class Facture {
             facture.setInformation(factureExiste.getInformation());
             facture.setModePaiement(factureExiste.getModePaiement());
             facture.setNom(factureExiste.getNom());
-            facture.setPrixVente(produit.getPrixVente());
+            facture.setPrix(produit.getPrix());
+            facture.setPrixVente(prixVente);
             facture.setQuantite(quantite);
             facture.setReferenceBonCommande(factureExiste.getReferenceBonCommande());
             facture.setReferenceClient(factureExiste.getReferenceClient());
@@ -650,6 +680,14 @@ public class Facture {
 
     public void setCaracteristique(String caracteristique) {
         this.caracteristique = caracteristique;
+    }
+
+    public Long getPrix() {
+        return prix;
+    }
+
+    public void setPrix(Long prix) {
+        this.prix = prix;
     }
 
     public Long getPrixVente() {
