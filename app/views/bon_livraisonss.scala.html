@@ -44,7 +44,6 @@
                 </div>
             </nav>
 
-
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse slimscrollsidebar">
 
@@ -62,9 +61,15 @@
                         <li> <a href="/clients" class="waves-effect"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Clients</span></a></li>
 
+                        <li class="nav-small-cap m-t-10">--- Factures</li>
                         <li> <a href="/factures-proformas" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Factures </span></a></li>
+                            Proforma </span></a></li>
+                        <li> <a href="/bons-livraisons" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                            Bon de livraison </span></a></li>
+                        <li> <a href="/factures-definitives" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                            Définitive </span></a></li>
 
+                        <li class="nav-small-cap m-t-10">--- Paramètres</li>
                         <li> <a href="/utilisateurs" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Utilisateurs </span></a></li>
                         <li><a href="/deconnexion" class="waves-effect"><i class="icon-logout fa-fw"></i> <span class="hide-menu">
@@ -74,12 +79,11 @@
                 </div>
             </div>
 
-
             <div id="page-wrapper">
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">Bon de commande N° </h4>
+                            <h4 class="page-title">Tous les bons de livraison</h4>
                         </div>
                     </div>
 
@@ -107,17 +111,15 @@
                                         <thead>
                                             <tr class="active">
                                                 <th>Référence</th>
-                                                <th>Produit</th>
                                                 <th>Client</th>
                                                 <th>Date</th>
-                                                <th class="text-nowrap">Action</th>
+                                                <th class="text-nowrap">Imprimer</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @for(facture <- factures) {
                                             <tr>
-                                                <td>@facture.getReferenceFactureProforma</td>
-                                                <td>@facture.getDesignation</td>
+                                                <td>@facture.getReferenceBonLivraison</td>
                                                 <td>@facture.getNom</td>
                                                 <td>
                                                 @if(facture.getWhenDone != null) {
@@ -125,9 +127,7 @@
                                                 }
                                                 </td>
                                                 <td class="text-nowrap">
-                                                    <a href="/factures/@facture.getId" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                                    <a href="/factures/@facture.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
-                                                </td>
+                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>                                                </td>
                                             </tr>
                                         }
                                         </tbody>
@@ -136,7 +136,6 @@
                             </div>
                         </div>
                     </div>
-
 
                 </div>
                 <footer class="footer text-center"> 2016 &copy;

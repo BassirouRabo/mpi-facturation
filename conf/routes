@@ -46,9 +46,11 @@ GET         /factures-proformas/:referenceFactureProforma                     co
 POST        /factures-proformas/:referenceFactureProforma                   controllers.FactureController.create(referenceFactureProforma: String)
 POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
 GET         /factures-proformas/:referenceFactureProforma/:id/delete        controllers.FactureController.delete(referenceFactureProforma: String, id: Long)
+GET         /factures-proformas/:referenceFactureProforma/create-bon-livraison           controllers.FactureController.createBonLivraison(referenceFactureProforma: String)
+GET         /factures-proformas/:referenceFactureProforma/create-facture-definitive           controllers.FactureController.createFactureDefinitive(referenceFactureProforma: String)
 
-GET         /bons-commandes                                                   controllers.FactureController.readsFirstBonCommande()
-GET         /bons-commandes/:referenceBonCommande                             controllers.FactureController.readsBonCommande(referenceBonCommande: String)
+GET         /bons-livraisons                                                   controllers.FactureController.readsFirstBonLivraison()
+GET         /bons-livraisons/:referenceBonLivraison                             controllers.FactureController.readsBonLivraison(referenceBonLivraison: String)
 
 GET         /factures-definitives                                             controllers.FactureController.readsFirstFactureDefinitive()
 GET         /factures-definitives/:referenceFactureDefinitive                 controllers.FactureController.readsFactureDefinitive(referenceFactureDefinitive: String)

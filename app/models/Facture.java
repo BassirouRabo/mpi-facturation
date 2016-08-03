@@ -1,6 +1,7 @@
 package models;
 
 import play.db.jpa.JPA;
+import utils.GenerateReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ public class Facture {
 
     @Column(name = "reference_facture_proforma", nullable = false)
     private String referenceFactureProforma;
-    @Column(name = "reference_bon_commande")
-    private String referenceBonCommande;
+    @Column(name = "reference_bon_livraison")
+    private String referenceBonLivraison;
     @Column(name = "reference_facture_definitive")
     private String referenceFactureDefinitive;
 
@@ -73,7 +74,7 @@ public class Facture {
     /**
      * Constructeur avec paramètre
      * @param referenceFactureProforma
-     * @param referenceBonCommande
+     * @param referenceBonLivraison
      * @param referenceFactureDefinitive
      * @param referenceClient
      * @param nom
@@ -96,9 +97,9 @@ public class Facture {
      * @param whenDone
      * @param whoDone
      */
-    public Facture(String referenceFactureProforma, String referenceBonCommande, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
+    public Facture(String referenceFactureProforma, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
         this.referenceFactureProforma = referenceFactureProforma;
-        this.referenceBonCommande = referenceBonCommande;
+        this.referenceBonLivraison = referenceBonLivraison;
         this.referenceFactureDefinitive = referenceFactureDefinitive;
         this.referenceClient = referenceClient;
         this.nom = nom;
@@ -168,13 +169,13 @@ public class Facture {
     }
 
     /**
-     * Retrouver list facture by BonCommande
+     * Retrouver list facture by BonLivraison
      *
      * @return
      */
-    private List<Facture> findListByBonCommande() {
+    private List<Facture> findListByBonLivraison() {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonCommande = :referenceBonCommande").setParameter("referenceBonCommande", 0).getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison != :referenceBonLivraison").setParameter("referenceBonLivraison", "0").getResultList();
         } catch (Exception e) {
             return null;
         }
@@ -187,7 +188,7 @@ public class Facture {
      */
     private List<Facture> findListByFactureDefinitive() {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive = :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", 0).getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive != :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", "0").getResultList();
         } catch (Exception e) {
             return null;
         }
@@ -209,14 +210,14 @@ public class Facture {
     }
 
     /**
-     * Retrouver list facture by referenceBonCommande
+     * Retrouver list facture by referenceBonLivraison
      *
-     * @param referenceBonCommande
+     * @param referenceBonLivraison
      * @return
      */
-    public List<Facture> findListByReferenceBonCommande(String referenceBonCommande) {
+    public List<Facture> findListByReferenceBonLivraison(String referenceBonLivraison) {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonCommande = :referenceBonCommande").setParameter("referenceBonCommande", referenceBonCommande).getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison = :referenceBonLivraison").setParameter("referenceBonLivraison", referenceBonLivraison).getResultList();
         } catch (Exception e) {
             return null;
         }
@@ -252,19 +253,16 @@ public class Facture {
     }
 
     /**
-     * Retrouver la première facture by referenceBonCommande
+     * Retrouver la première facture by referenceBonLivraison
      *
-     * @param referenceBonCommande
+     * @param referenceBonLivraison
      * @return
      */
-    private Facture findFirstByReferenceBonCommande(String referenceBonCommande) {
-        System.out.println("referenceBonCommande " + referenceBonCommande);
-        List<Facture> factures = findListByReferenceBonCommande(referenceBonCommande);
+    private Facture findFirstByReferenceBonLivraison(String referenceBonLivraison) {
+        List<Facture> factures = findListByReferenceBonLivraison(referenceBonLivraison);
         if (factures != null) {
-            System.out.println("factures != null id " + factures.get(0).getId());
             return factures.get(0);
         } else {
-            System.out.println("factures = null ");
             return null;
         }
     }
@@ -304,19 +302,19 @@ public class Facture {
     }
 
     /**
-     * Liste des premières factures by findListFirstByBonCommande
+     * Liste des premières factures by findListFirstByBonLivraison
      *
      * @return
      */
-    public List<Facture> findListFirstByBonCommande() {
+    public List<Facture> findListFirstByBonLivraison() {
         List<Facture> factureListOut = new ArrayList<>();
         HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByBonCommande();
+        List<Facture> factureList = findListByBonLivraison();
 
         if (factureList == null) {
             return null;
         } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceBonCommande(facture.getReferenceBonCommande())).collect(Collectors.toList()));
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceBonLivraison(facture.getReferenceBonLivraison())).collect(Collectors.toList()));
 
             factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
 
@@ -392,7 +390,7 @@ public class Facture {
             facture.setPrix(produit.getPrix());
             facture.setPrixVente(prixVente);
             facture.setQuantite(quantite);
-            facture.setReferenceBonCommande(factureExiste.getReferenceBonCommande());
+            facture.setReferenceBonLivraison(factureExiste.getReferenceBonLivraison());
             facture.setReferenceClient(factureExiste.getReferenceClient());
             facture.setReferenceFactureDefinitive(factureExiste.getReferenceFactureDefinitive());
             facture.setReferenceFactureProforma(factureExiste.getReferenceFactureProforma());
@@ -417,12 +415,12 @@ public class Facture {
      * @param referenceFactureProforma
      * @return
      */
-    public String createBonCommande(String referenceFactureProforma, String referenceBonCommande) {
+    public String createBonLivraison(String referenceFactureProforma, String referenceBonLivraison) {
         String result;
 
         List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
         for (Facture facture : factures) {
-            facture.setReferenceBonCommande(referenceBonCommande);
+            facture.setReferenceBonLivraison(referenceBonLivraison);
             result = facture.update(facture);
 
             if (result != null) {
@@ -451,6 +449,8 @@ public class Facture {
         return null;
     }
 
+
+
     /**
      * @param referenceFactureProforma
      * @return
@@ -469,6 +469,11 @@ public class Facture {
         return null;
     }
 
+    /**
+     *
+     * @param facture
+     * @return
+     */
     public String updateEntete(Facture facture) {
         String result;
         List<Facture> factures = findListByReferenceFactureProforma(facture.getReferenceFactureProforma());
@@ -570,6 +575,7 @@ public class Facture {
     }
 
 
+
     public Long getId() {
         return id;
     }
@@ -586,12 +592,12 @@ public class Facture {
         this.referenceFactureProforma = referenceFactureProforma;
     }
 
-    public String getReferenceBonCommande() {
-        return referenceBonCommande;
+    public String getReferenceBonLivraison() {
+        return referenceBonLivraison;
     }
 
-    public void setReferenceBonCommande(String referenceBonCommande) {
-        this.referenceBonCommande = referenceBonCommande;
+    public void setReferenceBonLivraison(String referenceBonLivraison) {
+        this.referenceBonLivraison = referenceBonLivraison;
     }
 
     public String getReferenceFactureDefinitive() {

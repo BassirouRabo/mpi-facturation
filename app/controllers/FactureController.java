@@ -11,6 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.GenerateRandom;
+import utils.GenerateReference;
 import utils.Secured;
 import views.html.*;
 
@@ -35,13 +36,13 @@ public class FactureController extends Controller {
     }
 
     @Transactional
-    public Result readsFirstBonCommande() {
-        List<Facture> factureList = new Facture().findListFirstByBonCommande();
+    public Result readsFirstBonLivraison() {
+        List<Facture> factureList = new Facture().findListFirstByBonLivraison();
 
         if (factureList == null) {
-            return ok(bon_commandess.render(new ArrayList<>()));
+            return ok(bon_livraisonss.render(new ArrayList<>()));
         } else {
-            return ok(bon_commandess.render(factureList));
+            return ok(bon_livraisonss.render(factureList));
         }
     }
 
@@ -70,13 +71,13 @@ public class FactureController extends Controller {
     }
 
     @Transactional
-    public Result readsBonCommande(String referenceBonCommande) {
-        List<Facture> factureList = new Facture().findListByReferenceBonCommande(referenceBonCommande);
+    public Result readsBonLivraison(String referenceBonLivraison) {
+        List<Facture> factureList = new Facture().findListByReferenceBonLivraison(referenceBonLivraison);
 
         if (factureList == null) {
-            return ok(bon_commandes.render(new ArrayList<>()));
+            return ok(bon_livraisons.render(new ArrayList<>()));
         } else {
-            return ok(bon_commandes.render(factureList));
+            return ok(bon_livraisons.render(factureList));
         }
     }
 
@@ -93,12 +94,12 @@ public class FactureController extends Controller {
 
     @Transactional
     public Result initialisation() {
-        String referenceFactureProforma = new GenerateRandom().generateRandomString();
+        String referenceFactureProforma = GenerateReference.generateReferenceFactureProforma();
 
         Facture facture = new Facture();
 
         facture.setReferenceFactureProforma(referenceFactureProforma);
-        facture.setReferenceBonCommande("0");
+        facture.setReferenceBonLivraison("0");
         facture.setReferenceFactureDefinitive("0");
         facture.setWhenDone(new Date());
         facture.setWhoDone(session("telephone"));
@@ -110,6 +111,34 @@ public class FactureController extends Controller {
         } else {
             return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
         }
+    }
+
+    @Transactional
+    public Result createBonLivraison(String referenceFactureProforma) {
+        String referenceBonLivraison = GenerateReference.generateReferenceBonLivraison(referenceFactureProforma);
+
+        String  result = new Facture().createBonLivraison(referenceFactureProforma, referenceBonLivraison);
+
+        if (result != null) {
+            flash("error", "Erreur de création de bon de livraison, veuillez réessayer");
+        } else {
+            flash("success", "Le bon de livraison a été créé");
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result createFactureDefinitive(String referenceFactureProforma) {
+        String referenceFactureDefinitive = GenerateReference.generateReferenceFactureDefinitive(referenceFactureProforma);
+
+        String  result = new Facture().createFactureDefinitive(referenceFactureProforma, referenceFactureDefinitive);
+
+        if (result != null) {
+            flash("error", "Erreur de création de la facture définitive, veuillez réessayer");
+        } else {
+            flash("success", "La facture définitive a été créée");
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
     }
 
     @Transactional
