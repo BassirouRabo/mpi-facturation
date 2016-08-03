@@ -194,6 +194,43 @@ public class Facture {
         }
     }
 
+    /**
+     * Retrouver list facture by FactureProforma and referenceClient
+     * @return
+     */
+    private List<Facture> findListByFactureProformaAndByClient(String referenceClient) {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceClient = :referenceClient").setParameter("referenceClient", referenceClient).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver list facture by BonLivraison and referenceClient
+     *
+     * @return
+     */
+    private List<Facture> findListByBonLivraisonAndByClient(String referenceClient) {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison != :referenceBonLivraison AND facture.referenceClient = :referenceClient").setParameter("referenceBonLivraison", "0").setParameter("referenceClient", referenceClient).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver list facture by FactureDefinitive and referenceClient
+     *
+     * @return
+     */
+    private List<Facture> findListByFactureDefinitiveAndByClient(String referenceClient) {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive != :referenceFactureDefinitive AND facture.referenceClient = :referenceClient").setParameter("referenceFactureDefinitive", "0").setParameter("referenceClient", referenceClient).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Retrouver list facture by referenceFactureProforma
@@ -301,6 +338,7 @@ public class Facture {
         }
     }
 
+
     /**
      * Liste des premières factures by findListFirstByBonLivraison
      *
@@ -321,6 +359,7 @@ public class Facture {
             return factureListOut;
         }
     }
+
 
     /**
      * Liste des premières factures by findListFirstByFactureDefinitive
@@ -343,6 +382,66 @@ public class Facture {
         }
     }
 
+    /**
+     *
+     * @param referenceClient
+     * @return
+     */
+    public List<Facture> findListFirstByFactureProformaByClient(String referenceClient) {
+        List<Facture> factureListOut = new ArrayList<>();
+        HashSet<Facture> factureHashSet = new HashSet<>();
+        List<Facture> factureList = findListByFactureProformaAndByClient(referenceClient);
+
+        if (factureList == null) {
+            return null;
+        } else {
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureProforma(facture.getReferenceFactureProforma())).collect(Collectors.toList()));
+            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
+            return factureListOut;
+        }
+    }
+
+    /**
+     *
+     * @param referenceClient
+     * @return
+     */
+    public List<Facture> findListFirstByBonLivraisonByClient(String referenceClient) {
+        List<Facture> factureListOut = new ArrayList<>();
+        HashSet<Facture> factureHashSet = new HashSet<>();
+        List<Facture> factureList = findListByBonLivraisonAndByClient(referenceClient);
+
+        if (factureList == null) {
+            return null;
+        } else {
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceBonLivraison(facture.getReferenceBonLivraison())).collect(Collectors.toList()));
+
+            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
+
+            return factureListOut;
+        }
+    }
+
+    /**
+     *
+     * @param referenceClient
+     * @return
+     */
+    public List<Facture> findListFirstByFactureDefinitiveByClient(String referenceClient) {
+        List<Facture> factureListOut = new ArrayList<>();
+        HashSet<Facture> factureHashSet = new HashSet<>();
+        List<Facture> factureList = findListByFactureDefinitiveAndByClient(referenceClient);
+
+        if (factureList == null) {
+            return null;
+        } else {
+            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureDefinitive(facture.getReferenceFactureDefinitive())).collect(Collectors.toList()));
+
+            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
+
+            return factureListOut;
+        }
+    }
 
     /**
      * Créer une facture

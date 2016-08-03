@@ -1,4 +1,5 @@
-@(client: Client)
+@import java.util
+@(client: Client, facturesProformas: util.List[Facture], bonsLivraisons: util.List[Facture], facturesDefinitives: util.List[Facture])
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -143,6 +144,120 @@
                                     </div>
 
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="white-box">
+                                <h4 class="page-title">Facture proforma</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="active">
+                                                <th>Référence</th>
+                                                <th>Date</th>
+                                                <th class="text-nowrap">Imprimer</th>
+                                                <th>Editer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @for(facture <- facturesProformas) {
+                                            <tr>
+                                                <td>@facture.getReferenceFactureProforma</td>
+                                                <td>
+                                                @if(facture.getWhenDone != null) {
+                                                    @facture.getWhenDone.format("dd-MM-yyyy")
+                                                }
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>
+                                                </td>
+                                                <td>
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma"  class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="white-box">
+                                <h4 class="page-title">Bon de livraison</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="active">
+                                                <th>Référence</th>
+                                                <th>Date</th>
+                                                <th class="text-nowrap">Imprimer</th>
+                                                <th>Editer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @for(facture <- bonsLivraisons) {
+                                            <tr>
+                                                <td>@facture.getReferenceBonLivraison</td>
+                                                <td>
+                                                @if(facture.getWhenDone != null) {
+                                                    @facture.getWhenDone.format("dd-MM-yyyy")
+                                                }
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>
+                                                </td>
+                                                <td>
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma"  class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="white-box">
+                                <h4 class="page-title">Facture définitive</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="active">
+                                                <th>Référence</th>
+                                                <th>Date</th>
+                                                <th class="text-nowrap">Imprimer</th>
+                                                <th>Editer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @for(facture <- facturesDefinitives) {
+                                            <tr>
+                                                <td>@facture.getReferenceFactureDefinitive</td>
+                                                <td>
+                                                @if(facture.getWhenDone != null) {
+                                                    @facture.getWhenDone.format("dd-MM-yyyy")
+                                                }
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>
+                                                </td>
+                                                <td>
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma"  class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -55,5 +55,9 @@ GET         /bons-livraisons/:referenceBonLivraison                             
 GET         /factures-definitives                                             controllers.FactureController.readsFirstFactureDefinitive()
 GET         /factures-definitives/:referenceFactureDefinitive                 controllers.FactureController.readsFactureDefinitive(referenceFactureDefinitive: String)
 
+GET         /clients/:referenceClient/factures-proformas                        controllers.FactureController.readsFirstFactureProformaByClient(referenceClient: String)
+GET         /clients/:referenceClient/bons-commandes                            controllers.FactureController.readsFirstBonLivraisonByClient(referenceClient: String)
+GET         /clients/:referenceClient/factures-definitives                      controllers.FactureController.readsFirstFactureDefinitiveByClient(referenceClient: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -118,6 +118,7 @@
                                                 <th>Email</th>
                                                 <th>Adresse</th>
                                                 <th>Information</th>
+                                                <th>Factures</th>
                                                 <th class="text-nowrap">Action</th>
                                             </tr>
                                         </thead>
@@ -130,6 +131,7 @@
                                                 <td>@client.getEmail</td>
                                                 <td>@client.getAdresse</td>
                                                 <td>@client.getInformation</td>
+                                                <td>Factures</td>
                                                 <td class="text-nowrap">
                                                     <a href="/clients/@client.getId" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
                                                     <a href="/clients/@client.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>

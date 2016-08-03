@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.inject.Inject;
 import models.Client;
+import models.Facture;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.jpa.Transactional;
@@ -34,11 +35,28 @@ public class ClientController extends Controller {
 
     @Transactional
     public Result read(Long id) {
-        Client ClientExiste = new Client().findById(id);
-        if (ClientExiste == null) {
+        Client clientExiste = new Client().findById(id);
+
+        if (clientExiste == null) {
             return redirect(controllers.routes.ClientController.reads());
         } else {
-            return ok(client.render(ClientExiste));
+            List<Facture> facturesProformas = new Facture().findListFirstByFactureProformaByClient(clientExiste.getReference());
+            List<Facture> bonsLivraisons = new Facture().findListFirstByBonLivraisonByClient(clientExiste.getReference());
+            List<Facture> facturesDefinitives = new Facture().findListFirstByFactureDefinitiveByClient(clientExiste.getReference());
+
+            if(facturesProformas == null) {
+                facturesProformas = new ArrayList<>();
+            }
+
+            if(bonsLivraisons == null) {
+                bonsLivraisons = new ArrayList<>();
+            }
+
+            if(facturesDefinitives == null) {
+                facturesDefinitives = new ArrayList<>();
+            }
+
+            return ok(client.render(clientExiste, facturesProformas, bonsLivraisons, facturesDefinitives));
         }
     }
 

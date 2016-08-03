@@ -58,6 +58,39 @@ public class FactureController extends Controller {
     }
 
     @Transactional
+    public Result readsFirstFactureProformaByClient(String referenceClient) {
+        List<Facture> factureList = new Facture().findListFirstByFactureProformaByClient(referenceClient);
+
+        if (factureList == null) {
+            return ok(facture_proformass.render(new ArrayList<>()));
+        } else {
+            return ok(facture_proformass.render(factureList));
+        }
+    }
+
+    @Transactional
+    public Result readsFirstBonLivraisonByClient(String referenceClient) {
+        List<Facture> factureList = new Facture().findListFirstByBonLivraisonByClient(referenceClient);
+
+        if (factureList == null) {
+            return ok(bon_livraisonss.render(new ArrayList<>()));
+        } else {
+            return ok(bon_livraisonss.render(factureList));
+        }
+    }
+
+    @Transactional
+    public Result readsFirstFactureDefinitiveByClient(String referenceClient) {
+        List<Facture> factureList = new Facture().findListFirstByFactureDefinitiveByClient(referenceClient);
+
+        if (factureList == null) {
+            return ok(facture_definitivess.render(new ArrayList<>()));
+        } else {
+            return ok(facture_definitivess.render(factureList));
+        }
+    }
+
+    @Transactional
     public Result readsFactureProforma(String referenceFactureProforma) {
         List<Facture> factureList = new Facture().findListByReferenceFactureProforma(referenceFactureProforma);
         List<Client> clientList = new Client().findList();
