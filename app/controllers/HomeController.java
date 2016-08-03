@@ -9,6 +9,7 @@ import play.mvc.Result;
 import views.html.connexion;
 import views.html.index;
 import views.html.inscription;
+
 import javax.inject.Inject;
 
 
@@ -16,6 +17,7 @@ public class HomeController extends Controller {
     @Inject
     FormFactory formFactory;
 
+    @Transactional
     public Result index() {
         if (session("telephone") == null) {
             return redirect(controllers.routes.HomeController.connexion());

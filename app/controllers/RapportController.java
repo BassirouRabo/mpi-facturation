@@ -15,9 +15,9 @@ public class RapportController extends Controller {
     public Result imprimer() throws IOException, ReportProcessingException {
 
 
-        Rapport rapport = new Rapport().findByCodeRapport("");
+        Rapport rapport = new Rapport().findByCodeRapport("13");
 
-        PdfPrinter.printer("10", rapport);
+        PdfPrinter.printer(rapport);
 
         return TODO;
     }

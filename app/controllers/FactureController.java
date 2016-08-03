@@ -10,7 +10,6 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import utils.GenerateRandom;
 import utils.GenerateReference;
 import utils.Secured;
 import views.html.*;
@@ -148,7 +147,7 @@ public class FactureController extends Controller {
 
     @Transactional
     public Result createBonLivraison(String referenceFactureProforma) {
-        String referenceBonLivraison = GenerateReference.generateReferenceBonLivraison(referenceFactureProforma);
+        String referenceBonLivraison = GenerateReference.generateReferenceBonLivraison();
 
         String  result = new Facture().createBonLivraison(referenceFactureProforma, referenceBonLivraison);
 
@@ -162,7 +161,7 @@ public class FactureController extends Controller {
 
     @Transactional
     public Result createFactureDefinitive(String referenceFactureProforma) {
-        String referenceFactureDefinitive = GenerateReference.generateReferenceFactureDefinitive(referenceFactureProforma);
+        String referenceFactureDefinitive = GenerateReference.generateReferenceFactureDefinitive();
 
         String  result = new Facture().createFactureDefinitive(referenceFactureProforma, referenceFactureDefinitive);
 

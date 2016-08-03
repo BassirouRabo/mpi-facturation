@@ -32,23 +32,16 @@ public class PdfPrinter extends AbstractReportGenerator {
 
     /**
      *
-     * @param codeCf
      * @param rapport
      * @throws IllegalArgumentException
      * @throws IOException
      * @throws ReportProcessingException
      */
-    public static void printer(String codeCf, Rapport rapport) throws IllegalArgumentException, IOException, ReportProcessingException {
-
-        PdfPrinter.QUERY_NAME = rapport.getLibelleRapport();
-        System.out.println(PdfPrinter.QUERY_NAME);
+    public static void printer(Rapport rapport) throws IllegalArgumentException, IOException, ReportProcessingException {
 
         PdfPrinter.URL = template + rapport.getTemplate();
-        System.out.println(PdfPrinter.URL);
-
-        /*String requete = rapport.getTmpQuery();
-        PdfPrinter.QUERY = requete.replace("${cf}", codeCf);
-        System.out.println(PdfPrinter.QUERY);*/
+        PdfPrinter.QUERY_NAME = rapport.getLibelleRapport();
+        PdfPrinter.QUERY = rapport.getTmpQuery();
 
         PdfPrinter printer = new PdfPrinter();
 
@@ -56,7 +49,7 @@ public class PdfPrinter extends AbstractReportGenerator {
         String nomTemplate = rapport.getTemplate();
         String nomRapport = nomTemplate.replace(subst, "");
 
-        final File outputFilename = new File(temp_pdf + '_' + nomRapport + '_' + DateTime.now().toString("YYYY-MM-dd") + ".pdf");
+        final File outputFilename = new File(temp_pdf + nomRapport + '_' + DateTime.now().toString("YYYY-MM-dd") + ".pdf");
 
         // Generate the report
         printer.generateReport(AbstractReportGenerator.OutputType.PDF, outputFilename);
