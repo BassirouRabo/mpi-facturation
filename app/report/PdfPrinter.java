@@ -1,7 +1,6 @@
 package report;
 
 import models.Rapport;
-import org.joda.time.DateTime;
 import org.pentaho.reporting.engine.classic.core.DataFactory;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
@@ -37,7 +36,7 @@ public class PdfPrinter extends AbstractReportGenerator {
      * @throws IOException
      * @throws ReportProcessingException
      */
-    public static void printer(Rapport rapport) throws IllegalArgumentException, IOException, ReportProcessingException {
+    public static void printer(String codeRapport, String reference, Rapport rapport) throws IllegalArgumentException, IOException, ReportProcessingException {
 
         PdfPrinter.URL = template + rapport.getTemplate();
         PdfPrinter.QUERY_NAME = rapport.getLibelleRapport();
@@ -49,7 +48,9 @@ public class PdfPrinter extends AbstractReportGenerator {
         String nomTemplate = rapport.getTemplate();
         String nomRapport = nomTemplate.replace(subst, "");
 
-        final File outputFilename = new File(temp_pdf + nomRapport + '_' + DateTime.now().toString("YYYY-MM-dd") + ".pdf");
+        // final File outputFilename = new File(temp_pdf + nomRapport + '_' + DateTime.now().toString("YYYY-MM-dd") + ".pdf");
+
+        final File outputFilename = new File(temp_pdf + reference + ".pdf");
 
         // Generate the report
         printer.generateReport(AbstractReportGenerator.OutputType.PDF, outputFilename);

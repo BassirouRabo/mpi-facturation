@@ -4,16 +4,20 @@ import com.google.inject.Inject;
 import models.Client;
 import models.Facture;
 import models.Produit;
+import models.Rapport;
+import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import report.PdfPrinter;
 import utils.GenerateReference;
 import utils.Secured;
 import views.html.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -131,6 +135,7 @@ public class FactureController extends Controller {
         Facture facture = new Facture();
 
         facture.setReferenceFactureProforma(referenceFactureProforma);
+        facture.setReferenceFactureProformaImpression("0");
         facture.setReferenceBonLivraison("0");
         facture.setReferenceFactureDefinitive("0");
         facture.setWhenDone(new Date());
@@ -143,52 +148,6 @@ public class FactureController extends Controller {
         } else {
             return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
         }
-    }
-
-    @Transactional
-    public Result createBonLivraison(String referenceFactureProforma) {
-        String referenceBonLivraison = GenerateReference.generateReferenceBonLivraison();
-
-        String  result = new Facture().createBonLivraison(referenceFactureProforma, referenceBonLivraison);
-
-        if (result != null) {
-            flash("error", "Erreur de création de bon de livraison, veuillez réessayer");
-        } else {
-            flash("success", "Le bon de livraison a été créé");
-        }
-        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
-    }
-
-    @Transactional
-    public Result createFactureDefinitive(String referenceFactureProforma) {
-        String referenceFactureDefinitive = GenerateReference.generateReferenceFactureDefinitive();
-
-        String  result = new Facture().createFactureDefinitive(referenceFactureProforma, referenceFactureDefinitive);
-
-        if (result != null) {
-            flash("error", "Erreur de création de la facture définitive, veuillez réessayer");
-        } else {
-            flash("success", "La facture définitive a été créée");
-        }
-        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
-    }
-
-    @Transactional
-    public Result updateEntete(String referenceFactureProforma) {
-        Form<Facture> form = formFactory.form(Facture.class).bindFromRequest();
-        if (form.hasErrors()) {
-            flash("error", "Veuillez vérifier les données saisies");
-        } else {
-            Facture facture = form.get();
-            facture.setReferenceFactureProforma(referenceFactureProforma);
-            String result = facture.updateEntete(facture);
-            if (result != null) {
-                flash("error", "Erreur de mise à jour");
-            } else {
-                flash("success", "Le résultat a été modifié");
-            }
-        }
-        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
     }
 
     @Transactional
@@ -210,14 +169,94 @@ public class FactureController extends Controller {
     }
 
     @Transactional
+    public Result createFactureProformaImpression(String referenceFactureProforma) throws IOException, ReportProcessingException {
+
+        String result = new Facture().createFactureProformaImpression(referenceFactureProforma);
+
+            if (result != null) {
+                flash("error", "Erreur de création de la facture proforma, veuillez réessayer");
+            } else {
+                Rapport rapport = new Rapport().findByCodeRapport("FP");
+                PdfPrinter.printer("FP", referenceFactureProforma, rapport);
+
+                flash("success", "La facture proforma a été créée");
+            }
+            return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result createBonLivraison(String referenceFactureProforma) throws IOException, ReportProcessingException {
+        String referenceBonLivraison = GenerateReference.generateReferenceBonLivraison();
+
+        String  result = new Facture().createBonLivraison(referenceFactureProforma, referenceBonLivraison);
+
+        if (result != null) {
+            flash("error", "Erreur de création de bon de livraison, veuillez réessayer");
+        } else {
+            Rapport rapport = new Rapport().findByCodeRapport("BL");
+            PdfPrinter.printer("BL", referenceBonLivraison, rapport);
+
+            flash("success", "Le bon de livraison a été créé");
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result createFactureDefinitive(String referenceFactureProforma) throws IOException, ReportProcessingException {
+        String referenceFactureDefinitive = GenerateReference.generateReferenceFactureDefinitive();
+
+        String  result = new Facture().createFactureDefinitive(referenceFactureProforma, referenceFactureDefinitive);
+
+        if (result != null) {
+            flash("error", "Erreur de création de la facture définitive, veuillez réessayer");
+        } else {
+            Rapport rapport = new Rapport().findByCodeRapport("FD");
+            PdfPrinter.printer("FD", referenceFactureDefinitive, rapport);
+
+            flash("success", "La facture définitive a été créée");
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result updateEntete(String referenceFactureProforma) {
+        Form<Facture> form = formFactory.form(Facture.class).bindFromRequest();
+        if (form.hasErrors()) {
+            flash("error", "Veuillez vérifier les données saisies");
+        } else {
+            Facture facture = form.get();
+            facture.setReferenceFactureProforma(referenceFactureProforma);
+            String result = facture.updateEntete(facture);
+            if (result != null) {
+                flash("error", "Erreur de mise à jour");
+            } else {
+                flash("success", "La facture a été modifiéz");
+            }
+        }
+        return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+
+    @Transactional
     public Result delete(String referenceFactureProforma, Long id) {
         String result = new Facture().delete(id);
         if (result != null) {
             flash("error", "Erreur de suppression, veuillez réessayer");
         } else {
-            flash("success", "Le produit a été supprimé");
+            flash("success", "La commande a été supprimée");
         }
         return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result deleteFacture(String referenceFactureProforma) {
+        String result = new Facture().deleteFacture(referenceFactureProforma);
+        if (result != null) {
+            flash("error", "Erreur de suppression de la facture, veuillez réessayer");
+        } else {
+            flash("success", "La facture a été supprimée");
+        }
+        return redirect(controllers.routes.FactureController.readsFirstFactureProforma());
     }
 
 }

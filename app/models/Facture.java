@@ -1,7 +1,6 @@
 package models;
 
 import play.db.jpa.JPA;
-import utils.GenerateReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,10 +18,13 @@ public class Facture {
 
     @Column(name = "reference_facture_proforma", nullable = false)
     private String referenceFactureProforma;
+    @Column(name = "reference_facture_proforma_impression")
+    private String referenceFactureProformaImpression;
     @Column(name = "reference_bon_livraison")
     private String referenceBonLivraison;
     @Column(name = "reference_facture_definitive")
     private String referenceFactureDefinitive;
+
 
     // Client
     @Column(name = "reference_client")
@@ -74,6 +76,7 @@ public class Facture {
     /**
      * Constructeur avec paramètre
      * @param referenceFactureProforma
+     * @param referenceFactureProformaImpression
      * @param referenceBonLivraison
      * @param referenceFactureDefinitive
      * @param referenceClient
@@ -97,8 +100,9 @@ public class Facture {
      * @param whenDone
      * @param whoDone
      */
-    public Facture(String referenceFactureProforma, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
+    public Facture(String referenceFactureProforma, String referenceFactureProformaImpression, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
         this.referenceFactureProforma = referenceFactureProforma;
+        this.referenceFactureProformaImpression = referenceFactureProformaImpression;
         this.referenceBonLivraison = referenceBonLivraison;
         this.referenceFactureDefinitive = referenceFactureDefinitive;
         this.referenceClient = referenceClient;
@@ -489,6 +493,7 @@ public class Facture {
             facture.setPrix(produit.getPrix());
             facture.setPrixVente(prixVente);
             facture.setQuantite(quantite);
+            facture.setReferenceFactureProformaImpression(factureExiste.getReferenceFactureProformaImpression());
             facture.setReferenceBonLivraison(factureExiste.getReferenceBonLivraison());
             facture.setReferenceClient(factureExiste.getReferenceClient());
             facture.setReferenceFactureDefinitive(factureExiste.getReferenceFactureDefinitive());
@@ -507,6 +512,26 @@ public class Facture {
             }
         }
 
+        return null;
+    }
+
+    /**
+     *
+     * @param referenceFactureProforma
+     * @return
+     */
+    public String createFactureProformaImpression(String referenceFactureProforma) {
+        String result;
+
+        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
+        for (Facture facture : factures) {
+            facture.setReferenceFactureProformaImpression(referenceFactureProforma);
+            result = facture.update(facture);
+
+            if (result != null) {
+                return result;
+            }
+        }
         return null;
     }
 
@@ -634,7 +659,7 @@ public class Facture {
      *
      * @return
      */
-    public String supprimer(String referenceFactureProforma) {
+    public String deleteFacture(String referenceFactureProforma) {
         String result;
 
         List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
@@ -689,6 +714,14 @@ public class Facture {
 
     public void setReferenceFactureProforma(String referenceFactureProforma) {
         this.referenceFactureProforma = referenceFactureProforma;
+    }
+
+    public String getReferenceFactureProformaImpression() {
+        return referenceFactureProformaImpression;
+    }
+
+    public void setReferenceFactureProformaImpression(String referenceFactureProformaImpression) {
+        this.referenceFactureProformaImpression = referenceFactureProformaImpression;
     }
 
     public String getReferenceBonLivraison() {

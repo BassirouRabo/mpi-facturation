@@ -158,8 +158,8 @@
                                             <tr class="active">
                                                 <th>Référence</th>
                                                 <th>Date</th>
-                                                <th class="text-nowrap">Imprimer</th>
-                                                <th>Editer</th>
+                                                <th>Détail</th>
+                                                <th>Imprimer</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -171,11 +171,11 @@
                                                     @facture.getWhenDone.format("dd-MM-yyyy")
                                                 }
                                                 </td>
-                                                <td class="text-nowrap">
-                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>
-                                                </td>
                                                 <td>
                                                     <a href="/factures-proformas/@facture.getReferenceFactureProforma"  class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/rapport/download/FP/@facture.getReferenceFactureProforma" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </a>
                                                 </td>
                                             </tr>
                                         }
@@ -196,8 +196,8 @@
                                             <tr class="active">
                                                 <th>Référence</th>
                                                 <th>Date</th>
-                                                <th class="text-nowrap">Imprimer</th>
-                                                <th>Editer</th>
+                                                <th>Détail</th>
+                                                <th>Imprimer</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -209,11 +209,11 @@
                                                     @facture.getWhenDone.format("dd-MM-yyyy")
                                                 }
                                                 </td>
-                                                <td class="text-nowrap">
-                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>
-                                                </td>
                                                 <td>
                                                     <a href="/factures-proformas/@facture.getReferenceFactureProforma"  class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/rapport/download/BL/@facture.getReferenceBonLivraison" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </a>
                                                 </td>
                                             </tr>
                                         }
@@ -234,8 +234,8 @@
                                             <tr class="active">
                                                 <th>Référence</th>
                                                 <th>Date</th>
-                                                <th class="text-nowrap">Imprimer</th>
-                                                <th>Editer</th>
+                                                <th>Détail</th>
+                                                <th>Imprimer</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -247,11 +247,11 @@
                                                     @facture.getWhenDone.format("dd-MM-yyyy")
                                                 }
                                                 </td>
-                                                <td class="text-nowrap">
-                                                    <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </button>
+                                                <td>
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
                                                 </td>
                                                 <td>
-                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma"  class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil"></i> </a>
+                                                    <a href="/rapport/download/FD/@facture.getReferenceFactureDefinitive" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i></span> </a>
                                                 </td>
                                             </tr>
                                         }

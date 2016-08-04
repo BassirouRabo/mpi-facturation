@@ -260,9 +260,28 @@
                                             <div class="clearfix"></div>
                                             <hr>
                                             <div class="text-right">
-                                                <button onClick="window.print();" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>Facture proforma</span> </button>
-                                                <a href="/factures-proformas/@factures.get(0).getReferenceFactureProforma/create-bon-livraison" class="btn btn-danger btn-outline" type="button"> <span>Bon de livraison</span> </a>
-                                                <a href="/factures-proformas/@factures.get(0).getReferenceFactureProforma/create-facture-definitive" class="btn btn-danger btn-outline" type="button"> <span>Facture définitive</span> </a>
+
+                                                @if(factures.get(0).getReferenceFactureProformaImpression.equals("0")) {
+                                                    <a href="/factures-proformas/@factures.get(0).getReferenceFactureProforma/create-facture-proforma-impression" class="btn btn-default btn-outline" type="button"> <span>
+                                                        Générer Facture proforma </span> </a>
+                                                } else {
+                                                    <a href="/rapport/download/FP/@factures.get(0).getReferenceFactureProforma" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>
+                                                        Facture proforma</span> </a>
+                                                }
+                                                @if(factures.get(0).getReferenceBonLivraison.equals("0")) {
+                                                    <a href="/factures-proformas/@factures.get(0).getReferenceFactureProforma/create-bon-livraison" class="btn btn-default btn-outline" type="button"> <span>
+                                                        Générer Bon de livraison </span> </a>
+                                                } else {
+                                                    <a href="/rapport/download/BL/@factures.get(0).getReferenceBonLivraison" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>
+                                                        Bon de livraison</span> </a>
+                                                }
+                                                @if(factures.get(0).getReferenceFactureDefinitive.equals("0")) {
+                                                    <a href="/factures-proformas/@factures.get(0).getReferenceFactureProforma/create-facture-definitive" class="btn btn-default btn-outline" type="button"> <span>
+                                                        Générer Facture définitive </span> </a>
+                                                } else {
+                                                    <a href="/rapport/download/FD/@factures.get(0).getReferenceFactureDefinitive" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>
+                                                        Facture définitive</span> </a>
+                                                }
                                             </div>
                                         </div>
                                     </div>

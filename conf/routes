@@ -46,6 +46,8 @@ GET         /factures-proformas/:referenceFactureProforma                     co
 POST        /factures-proformas/:referenceFactureProforma                   controllers.FactureController.create(referenceFactureProforma: String)
 POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
 GET         /factures-proformas/:referenceFactureProforma/:id/delete        controllers.FactureController.delete(referenceFactureProforma: String, id: Long)
+GET        /factures-proformas/:referenceFactureProforma/delete                                    controllers.FactureController.deleteFacture(referenceFactureProforma: String)
+GET        /factures-proformas/:referenceFactureProforma/create-facture-proforma-impression        controllers.FactureController.createFactureProformaImpression(referenceFactureProforma: String)
 GET         /factures-proformas/:referenceFactureProforma/create-bon-livraison           controllers.FactureController.createBonLivraison(referenceFactureProforma: String)
 GET         /factures-proformas/:referenceFactureProforma/create-facture-definitive           controllers.FactureController.createFactureDefinitive(referenceFactureProforma: String)
 
@@ -59,8 +61,9 @@ GET         /clients/:referenceClient/factures-proformas                        
 GET         /clients/:referenceClient/bons-commandes                            controllers.FactureController.readsFirstBonLivraisonByClient(referenceClient: String)
 GET         /clients/:referenceClient/factures-definitives                      controllers.FactureController.readsFirstFactureDefinitiveByClient(referenceClient: String)
 
+
 # Rapport
-GET        /imprimer        controllers.RapportController.imprimer()
+GET        /rapport/download/:codeRapport/:reference                                               controllers.RapportController.download(codeRapport: String, reference: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -115,7 +115,8 @@
                                                 <th>Référence</th>
                                                 <th>Client</th>
                                                 <th>Date</th>
-                                                <th class="text-nowrap">Action</th>
+                                                <th>Détail</th>
+                                                <th>Supprimer</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,9 +136,12 @@
                                                 }
                                                 </td>
                                                 <td class="text-nowrap">
-                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                                    <a href="/factures/@facture.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil"></i> </a>
                                                 </td>
+                                                <th>
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/delete" class="btn btn-danger btn-outline" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <span><i class="fa fa-close"></i> </span> </a>
+
+                                                </th>
                                             </tr>
                                         }
                                         </tbody>
