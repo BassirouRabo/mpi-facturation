@@ -16,6 +16,13 @@ GET         /categories/:id                 controllers.CategorieController.read
 POST        /categories/:id/update          controllers.CategorieController.update(id: Long)
 GET         /categories/:id/delete          controllers.CategorieController.delete(id: Long)
 
+# SousCategorie
+GET         /sous-categories                     controllers.SousCategorieController.reads()
+POST        /sous-categories                     controllers.SousCategorieController.create()
+GET         /sous-categories/:id                 controllers.SousCategorieController.read(id: Long)
+POST        /sous-categories/:id/update          controllers.SousCategorieController.update(id: Long)
+GET         /sous-categories/:id/delete          controllers.SousCategorieController.delete(id: Long)
+
 # Client
 GET         /clients                        controllers.ClientController.reads()
 POST        /clients                        controllers.ClientController.create()
