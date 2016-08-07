@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="@routes.Assets.versioned("images/favicon.png")">
-        <title>MPI | Catégories</title>
+        <title>MPI | Sous Catégories</title>
             <!-- Bootstrap Core CSS -->
         <link href="@routes.Assets.versioned("bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
             <!-- Menu CSS -->
@@ -49,11 +49,11 @@
                     <ul class="nav" id="side-menu">
                         <li class="nav-small-cap m-t-10">--- Main Menu</li>
 
-                        <li> <a href="/" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Tableau de bord </span></a></li>
 
-                        <li> <a href="/sousCategories" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Catégorie</span></a></li>
+                        <li> <a href="/sous-categories" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                            Sous Catégorie</span></a></li>
 
                         <li> <a href="/produits" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Produits</span></a></li>
@@ -82,7 +82,7 @@
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">Catégories</h4>
+                            <h4 class="page-title">Sous Catégories</h4>
                         </div>
                     </div>
 
@@ -140,16 +140,17 @@
                                 <form class="form-horizontal" method="post" action="/sous-categories">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <input name="nom" type="text" class="form-control" placeholder="Nom ..." required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
                                             <select class="form-control" name="categorie.id">
                                             @for(categorie <- categories) {
                                                 <option value="@categorie.getId">@categorie.getNom</option>
                                             }
                                             </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input name="nom" type="text" class="form-control" placeholder="Nom ..." required="required">
                                         </div>
                                     </div>
 

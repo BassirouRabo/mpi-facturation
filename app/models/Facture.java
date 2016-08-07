@@ -45,6 +45,8 @@ public class Facture {
     private String referenceProduit;
     @Column(name = "categorie")
     private String categorie;
+    @Column(name = "sous_categorie")
+    private String sousCategorie;
     @Column(name = "designation")
     private String designation;
     @Column(name = "caracteristique")
@@ -100,7 +102,7 @@ public class Facture {
      * @param whenDone
      * @param whoDone
      */
-    public Facture(String referenceFactureProforma, String referenceFactureProformaImpression, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
+    public Facture(String referenceFactureProforma, String referenceFactureProformaImpression, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String sousCategorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
         this.referenceFactureProforma = referenceFactureProforma;
         this.referenceFactureProformaImpression = referenceFactureProformaImpression;
         this.referenceBonLivraison = referenceBonLivraison;
@@ -113,6 +115,7 @@ public class Facture {
         this.information = information;
         this.referenceProduit = referenceProduit;
         this.categorie = categorie;
+        this.sousCategorie = sousCategorie;
         this.designation = designation;
         this.caracteristique = caracteristique;
         this.prix = prix;
@@ -284,7 +287,7 @@ public class Facture {
      * @param referenceFactureProforma
      * @return
      */
-    private Facture findFirstByReferenceFactureProforma(String referenceFactureProforma) {
+    public Facture findFirstByReferenceFactureProforma(String referenceFactureProforma) {
         List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
         if (factures != null) {
             return factures.get(0);
@@ -482,7 +485,8 @@ public class Facture {
         } else {
             facture.setAdresse(factureExiste.getAdresse());
             facture.setCaracteristique(produit.getCaracteristique());
-            facture.setCategorie(produit.getCategorie().getNom());
+            facture.setCategorie(produit.getSousCategorie().getCategorie().getNom());
+            facture.setSousCategorie(produit.getSousCategorie().getNom());
             facture.setDelaiLivraison(factureExiste.getDelaiLivraison());
             facture.setDesignation(produit.getDesignation());
             facture.setEmail(factureExiste.getEmail());
@@ -629,6 +633,7 @@ public class Facture {
         return null;
     }
 
+
     /**
      * @param facture
      * @return
@@ -640,6 +645,7 @@ public class Facture {
         if (factureExiste == null) {
             return "aucun enregistrement correspondant";
         } else {
+
             factureExiste.setDelaiLivraison(facture.getDelaiLivraison());
             factureExiste.setGarantie(facture.getGarantie());
             factureExiste.setModePaiement(facture.getModePaiement());
@@ -802,6 +808,14 @@ public class Facture {
 
     public void setCategorie(String categorie) {
         this.categorie = categorie;
+    }
+
+    public String getSousCategorie() {
+        return sousCategorie;
+    }
+
+    public void setSousCategorie(String sousCategorie) {
+        this.sousCategorie = sousCategorie;
     }
 
     public String getDesignation() {

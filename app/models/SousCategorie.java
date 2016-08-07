@@ -9,14 +9,13 @@ import java.util.List;
 @Table(name = "sous_categorie")
 public class SousCategorie {
 
+    @ManyToOne
+    Categorie categorie;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "nom", unique = true, nullable = false)
     private String nom;
-
-    @ManyToOne
-    Categorie categorie;
 
     /**
      * Constructeur avec paramètres
@@ -71,6 +70,20 @@ public class SousCategorie {
     public SousCategorie findByNom(String nom) {
         try {
             return (SousCategorie) JPA.em().createQuery("select sousCategorie From SousCategorie sousCategorie WHERE sousCategorie.nom = :nom").setParameter("nom", nom).getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * List des sous categorie d'une categorie
+     *
+     * @param idCategorie
+     * @return
+     */
+    public List<SousCategorie> findListByCategorie(Long idCategorie) {
+        try {
+            return JPA.em().createQuery("select sousCategorie From SousCategorie sousCategorie WHERE categorie.id = :idCategorie").setParameter("idCategorie", idCategorie).getResultList();
         } catch (Exception e) {
             return null;
         }

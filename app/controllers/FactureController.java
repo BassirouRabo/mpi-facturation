@@ -129,6 +129,23 @@ public class FactureController extends Controller {
     }
 
     @Transactional
+    public Result readFactureProforma(String referenceFactureProforma) {
+        Facture facture = new Facture().findFirstByReferenceFactureProforma(referenceFactureProforma);
+
+        if (null == facture) {
+            return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+        } else {
+            List<Client> clients = new Client().findList();
+
+            if (null == clients) {
+                return ok(facture_proforma.render(facture, new ArrayList<>()));
+            } else {
+                return ok(facture_proforma.render(facture, clients));
+            }
+        }
+    }
+
+    @Transactional
     public Result initialisation() {
         String referenceFactureProforma = GenerateReference.generateReferenceFactureProforma();
 
@@ -234,6 +251,24 @@ public class FactureController extends Controller {
             }
         }
         return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+    }
+
+    @Transactional
+    public Result updateEntete2(String referenceFactureProforma) {
+        Form<Facture> form = formFactory.form(Facture.class).bindFromRequest();
+        if (form.hasErrors()) {
+            flash("error", "Veuillez vérifier les données saisies");
+        } else {
+            Facture facture = form.get();
+            String result = facture.updateEntete(facture);
+            if (result != null) {
+                flash("error", "Erreur de mise à jour");
+            } else {
+                flash("success", "La facture a été modifiéz");
+                return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+            }
+        }
+        return redirect(controllers.routes.FactureController.readFactureProforma(referenceFactureProforma));
     }
 
 

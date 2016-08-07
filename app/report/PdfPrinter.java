@@ -24,6 +24,7 @@ public class PdfPrinter extends AbstractReportGenerator {
     public static String URL;
     public static String QUERY;
     public static String temp_pdf = play.Configuration.root().getString("Tmp_pdf");
+    public static String destination_folder = play.Configuration.root().getString("destination_image");
     private static String template = play.Configuration.root().getString("Template");
     private static String host = play.Configuration.root().getString("dhost");
     private static String user = play.Configuration.root().getString("duser");

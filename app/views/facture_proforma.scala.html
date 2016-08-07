@@ -1,5 +1,5 @@
 @import java.util
-@(categorie: Categorie, sousCategories: util.List[SousCategorie])
+@(facture: Facture, clients: util.List[Client])
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="@routes.Assets.versioned("images/favicon.png")">
-        <title>MPI | Utilisateurs</title>
+        <title>MPI | Facture proforma</title>
             <!-- Bootstrap Core CSS -->
         <link href="@routes.Assets.versioned("bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
             <!-- Menu CSS -->
@@ -49,7 +49,7 @@
                     <ul class="nav" id="side-menu">
                         <li class="nav-small-cap m-t-10">--- Main Menu</li>
 
-                        <li> <a href="/categories" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Catégorie</span></a></li>
                         <li> <a href="/sous-categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Sous Catégorie</span></a></li>
@@ -60,7 +60,7 @@
                             Clients</span></a></li>
 
                         <li class="nav-small-cap m-t-10">--- Factures</li>
-                        <li> <a href="/factures-proformas" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/factures-proformas" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Proforma </span></a></li>
                         <li> <a href="/bons-livraisons" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Bon de livraison </span></a></li>
@@ -102,71 +102,63 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-12 col-xs-12">
-                            <form method="post" action="/categories/@categorie.getId/update">
-                                <div class="form-group">
-                                    <div class="input-group m-t-10">
-                                        <input name="nom" type="text" id="nom" class="form-control" value="@categorie.getNom">
-                                        <span class="input-group-btn">
-                                            <button type="submit" class="btn waves-effect waves-light btn-danger">Modifier</button>
-                                        </span>
+                        <div class="col-sm-12">
+                            <div class="white-box">
+                                <h3 class="box-title m-b-0">
+                                    Modification de la facture N° @facture.getReferenceFactureProforma</h3>
+                                <form class="form-horizontal" method="post" action="/factures-proformas/@facture.getReferenceFactureProforma/updateEntete2">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <select class="form-control" name="referenceClient">
+                                            @for(client <- clients) {
+                                                @if(client.getReference.equals(facture.getReferenceClient)) {
+                                                    <option value="@client.getReference" selected="selected">@client.getNom</option>
+                                                } else {
+                                                    <option value="@client.getReference">@client.getNom</option>
+                                                }
+                                            }
+                                            </select>
+                                        </div>
                                     </div>
-
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="white-box">
-                                <h2><small>Sous catégories</small></h2>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr class="active">
-                                                <th>Nom</th>
-                                                <th>Détail</th>
-                                                <th>Supprimer</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @for(sousCategorie <- sousCategories) {
-                                            <tr>
-                                                <td>@sousCategorie.getNom</td>
-                                                <td>
-                                                    <a href="/sous-categories/@sousCategorie.getId" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil"></i> </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/sous-categories/@sousCategorie.getId/delete" class="btn btn-danger btn-outline" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <span><i class="fa fa-close"></i> </span> </a>
-                                                </td>
-                                            </tr>
-                                        }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="white-box">
-                                <h3 class="box-title m-b-0">Ajouter une sous categorie</h3>
-                                <form class="form-horizontal" method="post" action="/sous-categories">
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <input name="nom" type="text" class="form-control" placeholder="Nom ..." required="required">
+                                            <input name="delaiLivraison" type="text" class="form-control" value="@facture.getDelaiLivraison" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input name="garantie" type="text" class="form-control" value="@facture.getGarantie" required="required">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input name="modePaiement" type="text" class="form-control" value="@facture.getModePaiement" required="required">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input name="validite" type="text" class="form-control" value="@facture.getValidite" required="required">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input name="remise" type="number" min="0" max="100" class="form-control" value="@facture.getRemise" >
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="col-md-2">
-                                            <input type="hidden" name="categorie.id" value="@categorie.getId">
-                                            <button type="submit" class="btn btn-block btn-danger">Ajouter</button>
+                                            <input type="hidden" name="id" value="@facture.getId">
+                                            <input type="hidden" name="referenceFactureProforma" value="@facture.getReferenceFactureProforma">
+                                            <button type="submit" class="btn btn-block btn-default">Modifier</button>
                                         </div>
                                     </div>
+
                                 </form>
+
                             </div>
                         </div>
                     </div>

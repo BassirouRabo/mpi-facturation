@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.inject.Inject;
 import models.Categorie;
+import models.SousCategorie;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.jpa.Transactional;
@@ -35,10 +36,16 @@ public class CategorieController extends Controller {
     @Transactional
     public Result read(Long id) {
         Categorie CategorieExiste = new Categorie().findById(id);
+        List<SousCategorie> sousCategorieList = new SousCategorie().findListByCategorie(id);
+
         if(CategorieExiste == null) {
             return redirect(controllers.routes.CategorieController.reads());
         } else {
-            return ok(categorie.render(CategorieExiste));
+            if(null == sousCategorieList) {
+                return ok(categorie.render(CategorieExiste, new ArrayList<>()));
+            } else {
+                return ok(categorie.render(CategorieExiste, sousCategorieList));
+            }
         }
     }
 

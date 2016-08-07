@@ -6,9 +6,7 @@ import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.connexion;
-import views.html.index;
-import views.html.inscription;
+import views.html.*;
 
 import javax.inject.Inject;
 
@@ -57,6 +55,16 @@ public class HomeController extends Controller {
                 return redirect(controllers.routes.HomeController.index());
             }
         }
+    }
+
+    @Transactional
+    public Result errorClient() {
+        return ok(error_client.render());
+    }
+
+    @Transactional
+    public Result errorServer(String message) {
+        return ok(error_server.render(message));
     }
 
 }

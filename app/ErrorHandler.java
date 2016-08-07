@@ -11,14 +11,15 @@ import java.util.concurrent.CompletionStage;
 public class ErrorHandler implements HttpErrorHandler {
     public CompletionStage<Result> onClientError(RequestHeader request, int statusCode, String message) {
         return CompletableFuture.completedFuture(
-                //   Results.redirect(controllers.routes.HomeController.index())
-                Results.status(statusCode, "A client error occurred: " + message + "statusCode "+statusCode)
+                Results.redirect(controllers.routes.HomeController.errorClient())
+                //Results.status(statusCode, "A client error occurred: " + message + "statusCode "+statusCode)
         );
     }
 
     public CompletionStage<Result> onServerError(RequestHeader request, Throwable exception) {
         return CompletableFuture.completedFuture(
-                Results.internalServerError("Une erreur serveur, contacter l'administrateur en lui envoyant le message suivant: " + exception.getMessage())
+                // Results.internalServerError("Une erreur serveur, contacter l'administrateur en lui envoyant le message suivant: " + exception.getMessage())
+                Results.redirect(controllers.routes.HomeController.errorServer(exception.getMessage()))
         );
     }
 }

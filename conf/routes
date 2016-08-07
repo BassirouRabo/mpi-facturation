@@ -7,6 +7,10 @@ GET         /connexion          controllers.HomeController.connexion()
 GET         /deconnexion        controllers.HomeController.deconnexion()
 GET         /inscription        controllers.HomeController.inscription()
 POST        /connexion          controllers.HomeController.authentification()
+GET         /error-client                                                      controllers.HomeController.errorClient()
+GET         /error-server                                                      controllers.HomeController.errorServer(message: String)
+
+POST        /upload                                                            controllers.ProduitController.upload()
 
 
 # Categorie
@@ -52,6 +56,8 @@ GET         /factures-proformas                                               co
 GET         /factures-proformas/:referenceFactureProforma                     controllers.FactureController.readsFactureProforma(referenceFactureProforma: String)
 POST        /factures-proformas/:referenceFactureProforma                   controllers.FactureController.create(referenceFactureProforma: String)
 POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
+POST        /factures-proformas/:referenceFactureProforma/updateEntete2        controllers.FactureController.updateEntete2(referenceFactureProforma: String)
+GET         /factures-proformas/:referenceFactureProforma/edit                 controllers.FactureController.readFactureProforma(referenceFactureProforma: String)
 GET         /factures-proformas/:referenceFactureProforma/:id/delete        controllers.FactureController.delete(referenceFactureProforma: String, id: Long)
 GET        /factures-proformas/:referenceFactureProforma/delete                                    controllers.FactureController.deleteFacture(referenceFactureProforma: String)
 GET        /factures-proformas/:referenceFactureProforma/create-facture-proforma-impression        controllers.FactureController.createFactureProformaImpression(referenceFactureProforma: String)

@@ -12,6 +12,7 @@ import play.mvc.Security;
 import utils.Secured;
 import views.html.sous_categorie;
 import views.html.sous_categories;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,6 @@ public class SousCategorieController extends Controller {
         } else {
             return ok(sous_categories.render(sousCategorieList, categoriesList));
         }
-
     }
 
     @Transactional
@@ -60,9 +60,10 @@ public class SousCategorieController extends Controller {
             if (result != null) {
                 flash("error", "Ce sousCategorie existe déjà. Veuillez saisir un nouveau");
             } else {
-                flash("success", "L'sousCategorie été ajouté");
+                flash("success", "La sous categorie été ajoutée");
             }
         }
+
         return redirect(controllers.routes.SousCategorieController.reads());
     }
 
@@ -78,7 +79,7 @@ public class SousCategorieController extends Controller {
             if (result != null) {
                 flash("error", "Erreur - Veuillez vérifier les données saisie");
             } else {
-                flash("success", "Le résultat a été modifié");
+                flash("success", "La sous categorie a été modifiée");
             }
         }
         return redirect(controllers.routes.SousCategorieController.read(id));

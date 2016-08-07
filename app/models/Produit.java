@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "produit")
 public class Produit {
     @ManyToOne
-    Categorie categorie;
+    SousCategorie sousCategorie;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,13 +22,26 @@ public class Produit {
     private String caracteristique;
     @Column(name = "prix")
     private Long prix;
+    @Column(name = "image")
+    private String image;
 
-    public Produit(Categorie categorie, String reference, String designation, String caracteristique, Long prix) {
-        this.categorie = categorie;
+    /**
+     * Constructeur avec argument
+     *
+     * @param sousCategorie
+     * @param reference
+     * @param designation
+     * @param caracteristique
+     * @param prix
+     * @param image
+     */
+    public Produit(SousCategorie sousCategorie, String reference, String designation, String caracteristique, Long prix, String image) {
+        this.sousCategorie = sousCategorie;
         this.reference = reference;
         this.designation = designation;
         this.caracteristique = caracteristique;
         this.prix = prix;
+        this.image = image;
     }
 
     /**
@@ -112,7 +125,8 @@ public class Produit {
             produitExiste.setDesignation(produit.getDesignation());
             produitExiste.setCaracteristique(produit.getCaracteristique());
             produitExiste.setPrix(produit.getPrix());
-            produitExiste.setCategorie(produit.getCategorie());
+            produitExiste.setImage(produit.getImage());
+            produitExiste.setSousCategorie(produit.getSousCategorie());
             try {
                 JPA.em().persist(produitExiste);
             } catch (Exception e) {
@@ -146,12 +160,12 @@ public class Produit {
         }
     }
 
-    public Categorie getCategorie() {
-        return categorie;
+    public SousCategorie getSousCategorie() {
+        return sousCategorie;
     }
 
-    public void setCategorie(Categorie categorie) {
-        this.categorie = categorie;
+    public void setSousCategorie(SousCategorie sousCategorie) {
+        this.sousCategorie = sousCategorie;
     }
 
     public Long getId() {
@@ -192,5 +206,13 @@ public class Produit {
 
     public void setPrix(Long prix) {
         this.prix = prix;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
