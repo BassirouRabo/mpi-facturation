@@ -10,8 +10,6 @@ POST        /connexion          controllers.HomeController.authentification()
 GET         /error-client                                                      controllers.HomeController.errorClient()
 GET         /error-server                                                      controllers.HomeController.errorServer(message: String)
 
-POST        /upload                                                            controllers.ProduitController.upload()
-
 
 # Categorie
 GET         /categories                     controllers.CategorieController.reads()
