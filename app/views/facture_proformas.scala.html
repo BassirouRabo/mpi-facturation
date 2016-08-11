@@ -1,5 +1,5 @@
 @import java.util
-@(factures: util.List[Facture], clients: util.List[Client], produits: util.List[Produit])
+@(factures: util.List[Facture], clients: util.List[Client], produits: util.List[Produit], factureTotalPojo: utils.FactureTotalPojo, getReference: utils.GetReference)
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -37,7 +37,7 @@
 
             <nav class="navbar navbar-default navbar-static-top m-b-0">
                 <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-                    <div class="top-left-part"><a class="logo" href="index.html"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
+                    <div class="top-left-part"><a class="logo" href="/"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
                     <ul class="nav navbar-top-links navbar-left hidden-xs">
                         <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
                     </ul>
@@ -85,7 +85,7 @@
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                             <h4 class="page-title">
-                                Facture proforma N° : <small>@factures.get(0).getReferenceFactureProforma</small> <br>
+                                Facture proforma N° : <small>@getReference.getType(factures.get(0).getReferenceFactureProforma) @getReference.getNumero(factures.get(0).getReferenceFactureProforma) @getReference.getMois(factures.get(0).getReferenceFactureProforma)  @getReference.getAnnee(factures.get(0).getReferenceFactureProforma)</small> <br>
                                 Date :
                                 @if(factures.get(0).getWhenDone != null) {
                                     <small>@factures.get(0).getWhenDone.format("dd-MM-yyyy")</small>
@@ -117,6 +117,11 @@
                                 <div class="white-box">
                                     <h3 class="box-title m-b-0">Veuillez remplir les champs ci-après</h3>
                                     <form class="form-horizontal" method="post" action="/factures-proformas/@factures.get(0).getReferenceFactureProforma/updateEntete">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="intitule" type="text" class="form-control" placeholder="Intitulé de la facture" required="required">
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <select class="form-control" name="referenceClient">
@@ -183,16 +188,14 @@
                                     <div class="tab-content">
                                         <div role="tabpanel" class="tab-pane fade active in" id="client">
                                             <dl>
-                                                <dt>RÉFÉRENCE</dt>
-                                                <dd>@factures.get(0).getReferenceClient</dd>
                                                 <dt>NOM</dt>
-                                                <dd>@factures.get(0).getNom</dd>
+                                                <dd>@factures.get(0).getNom</dd><br>
                                                 <dt>TÉLÉPHONE</dt>
-                                                <dd>@factures.get(0).getTelephone</dd>
+                                                <dd>@factures.get(0).getTelephone</dd><br>
                                                 <dt>EMAIL</dt>
-                                                <dd>@factures.get(0).getEmail</dd>
+                                                <dd>@factures.get(0).getEmail</dd><br>
                                                 <dt>ADRESSE</dt>
-                                                <dd>@factures.get(0).getAdresse</dd>
+                                                <dd>@factures.get(0).getAdresse</dd><br>
                                                 <dt>INFORMATION</dt>
                                                 <dd>@factures.get(0).getInformation</dd>
                                             </dl>
@@ -200,12 +203,14 @@
                                         </div>
                                         <div role="tabpanel" class="tab-pane fade" id="commande">
                                             <dl>
+                                                <dt>INTITULÉ</dt>
+                                                <dd>@factures.get(0).getIntitule</dd><br>
                                                 <dt>DÉLAI DE LIVRAISON</dt>
-                                                <dd>@factures.get(0).getDelaiLivraison</dd>
+                                                <dd>@factures.get(0).getDelaiLivraison</dd><br>
                                                 <dt>GARANTIE</dt>
-                                                <dd>@factures.get(0).getGarantie</dd>
+                                                <dd>@factures.get(0).getGarantie</dd><br>
                                                 <dt>MODE DE PAIEMENT</dt>
-                                                <dd>@factures.get(0).getModePaiement</dd>
+                                                <dd>@factures.get(0).getModePaiement</dd><br>
                                                 <dt>VALIDITE DE L'OFFRE</dt>
                                                 <dd>@factures.get(0).getValidite</dd>
                                             </dl>
@@ -221,27 +226,25 @@
                                                 <table class="table table-hover">
                                                     <thead>
                                                         <tr>
-                                                            <th>Référence produit</th>
                                                             <th>Désignation</th>
                                                             <th class="text-right">Quantité</th>
-                                                            <th class="text-right">P.U</th>
-                                                            <th class="text-right">Prix Vente</th>
+                                                            <th class="text-right">P.V</th>
                                                             <th class="text-right">Total</th>
-                                                            <th class="text-right">Action</th>
+                                                            <th class="text-right">Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                     @for(facture <- factures) {
                                                         @if(facture.getReferenceProduit != null) {
                                                             <tr>
-                                                                <td>@facture.getReferenceProduit</td>
-                                                                <td>@facture.getDesignation</td>
-                                                                <td class="text-right">@facture.getQuantite</td>
-                                                                <td class="text-right">@facture.getPrix</td>
-                                                                <td class="text-right">@facture.getPrixVente</td>
-                                                                <td class="text-right">@(facture.getPrixVente * facture.getQuantite)</td>
+                                                                <td><strong>@facture.getDesignation</strong><br><br>@facture.getCaracteristique</td>
+                                                                <td class="text-right"><span class="number">@facture.getQuantite</span></td>
+                                                                <td class="text-right"><span class="number">@facture.getPrixVente</span></td>
+                                                                <td class="text-right"><span class="number">@(facture.getPrixVente * facture.getQuantite)</span></td>
+
                                                                 <td class="text-right text-nowrap">
-                                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/@facture.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
+                                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/@facture.getId/updateProduit" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil"></i> </a>
+                                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/@facture.getId/delete" class="btn btn-danger btn-outline" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -252,10 +255,15 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="pull-right m-t-30 text-right">
-                                                <p>Total HT: 450000</p>
-                                                <p>TVA (19%) : 18000 </p>
+                                                <p>Total HT: <span class="number">@factureTotalPojo.getHt</span></p>
+                                                @if(null != factures.get(1).getRemise ) {
+                                                    <p>Remise (<span class="number">@factures.get(1).getRemise</span> %): <span class="number">@factureTotalPojo.getRemise</span></p>
+                                                }
+                                                <p>Net à payer : <span class="number">@factureTotalPojo.getNet</span></p>
+                                                <p>TVA (19 %) : <span class="number">@factureTotalPojo.getTva </span></p>
                                                 <hr>
-                                                <h3><b>Total TTC :</b> 502000</h3>
+                                                <h3><b>Total TTC :</b> <span class="number">@factureTotalPojo.getTtc</span></h3>
+
                                             </div>
                                             <div class="clearfix"></div>
                                             <hr>
@@ -311,7 +319,6 @@
                                     <table class="table table-bordered order-table">
                                         <thead>
                                             <tr class="active">
-                                                <th>Référence</th>
                                                 <th>Catégorie</th>
                                                 <th>Sous catégorie</th>
                                                 <th>Désignation</th>
@@ -326,14 +333,13 @@
                                         @for(produit <- produits) {
                                             <form method="post" action="/factures-proformas/@factures.get(0).getReferenceFactureProforma">
                                                 <tr>
-                                                    <td>@produit.getReference</td>
                                                     <td>@produit.getSousCategorie.getCategorie.getNom</td>
                                                     <td>@produit.getSousCategorie.getNom</td>
                                                     <td>@produit.getDesignation</td>
                                                     <td>@produit.getCaracteristique</td>
-                                                    <td>@produit.getPrix</td>
+                                                    <td><span class="number">@produit.getPrix</span></td>
                                                     <td>
-                                                        <input name="prixVente" type="number" min="1" class="form-control" required="required">
+                                                        <input name="prixVente" type="number" value="@produit.getPrix" min="1" class="form-control" required="required">
                                                     </td>
                                                     <td>
                                                         <input name="quantite" type="number" min="1" class="form-control" value="1" required="required">
@@ -380,5 +386,12 @@
         <script src="@routes.Assets.versioned("bower_components/peity/jquery.peity.init.js")"></script>
             <!--Style Switcher -->
         <script src="@routes.Assets.versioned("bower_components/styleswitcher/jQuery.style.switcher.js")"></script>
+
+        <script src='@routes.Assets.versioned("js/jquery.number.js")' type="text/javascript"></script>
+        <script type="text/javascript">
+    $('span.number').number( true, 0, ',', ' ' );
+
+</script>
+
 
     </body>

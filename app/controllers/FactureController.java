@@ -13,7 +13,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import report.PdfPrinter;
+import utils.FactureTotalPojo;
 import utils.GenerateReference;
+import utils.GetReference;
 import utils.Secured;
 import views.html.*;
 
@@ -32,9 +34,9 @@ public class FactureController extends Controller {
         List<Facture> factureList = new Facture().findListFirstByFactureProforma();
 
         if (factureList == null) {
-            return ok(facture_proformass.render(new ArrayList<>()));
+            return ok(facture_proformass.render(new ArrayList<>(), new GetReference()));
         } else {
-            return ok(facture_proformass.render(factureList));
+            return ok(facture_proformass.render(factureList, new GetReference()));
         }
     }
 
@@ -43,9 +45,9 @@ public class FactureController extends Controller {
         List<Facture> factureList = new Facture().findListFirstByBonLivraison();
 
         if (factureList == null) {
-            return ok(bon_livraisonss.render(new ArrayList<>()));
+            return ok(bon_livraisonss.render(new ArrayList<>(), new GetReference()));
         } else {
-            return ok(bon_livraisonss.render(factureList));
+            return ok(bon_livraisonss.render(factureList, new GetReference()));
         }
     }
 
@@ -54,9 +56,9 @@ public class FactureController extends Controller {
         List<Facture> factureList = new Facture().findListFirstByFactureDefinitive();
 
         if (factureList == null) {
-            return ok(facture_definitivess.render(new ArrayList<>()));
+            return ok(facture_definitivess.render(new ArrayList<>(), new GetReference()));
         } else {
-            return ok(facture_definitivess.render(factureList));
+            return ok(facture_definitivess.render(factureList, new GetReference()));
         }
     }
 
@@ -65,9 +67,9 @@ public class FactureController extends Controller {
         List<Facture> factureList = new Facture().findListFirstByFactureProformaByClient(referenceClient);
 
         if (factureList == null) {
-            return ok(facture_proformass.render(new ArrayList<>()));
+            return ok(facture_proformass.render(new ArrayList<>(), new GetReference()));
         } else {
-            return ok(facture_proformass.render(factureList));
+            return ok(facture_proformass.render(factureList, new GetReference()));
         }
     }
 
@@ -76,9 +78,9 @@ public class FactureController extends Controller {
         List<Facture> factureList = new Facture().findListFirstByBonLivraisonByClient(referenceClient);
 
         if (factureList == null) {
-            return ok(bon_livraisonss.render(new ArrayList<>()));
+            return ok(bon_livraisonss.render(new ArrayList<>(), new GetReference()));
         } else {
-            return ok(bon_livraisonss.render(factureList));
+            return ok(bon_livraisonss.render(factureList, new GetReference()));
         }
     }
 
@@ -87,9 +89,9 @@ public class FactureController extends Controller {
         List<Facture> factureList = new Facture().findListFirstByFactureDefinitiveByClient(referenceClient);
 
         if (factureList == null) {
-            return ok(facture_definitivess.render(new ArrayList<>()));
+            return ok(facture_definitivess.render(new ArrayList<>(), new GetReference()));
         } else {
-            return ok(facture_definitivess.render(factureList));
+            return ok(facture_definitivess.render(factureList, new GetReference()));
         }
     }
 
@@ -99,11 +101,19 @@ public class FactureController extends Controller {
         List<Client> clientList = new Client().findList();
         List<Produit> produits = new Produit().findList();
 
-        if (factureList == null || clientList == null || produits == null) {
-            return ok(facture_proformas.render(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        } else {
-            return ok(facture_proformas.render(factureList, clientList, produits));
+        FactureTotalPojo factureTotalPojo = new FactureTotalPojo().calcul(referenceFactureProforma);
+
+        if(null == factureList) {
+            factureList = new ArrayList<>();
         }
+        if(null == clientList) {
+            clientList = new ArrayList<>();
+        }
+        if(null == produits) {
+            produits = new ArrayList<>();
+        }
+
+        return ok(facture_proformas.render(factureList, clientList, produits, factureTotalPojo, new GetReference()));
     }
 
     @Transactional
@@ -292,6 +302,37 @@ public class FactureController extends Controller {
             flash("success", "La facture a été supprimée");
         }
         return redirect(controllers.routes.FactureController.readsFirstFactureProforma());
+    }
+
+    @Transactional
+    public Result editProduit(String referenceFactureProforma, Long id) {
+        Facture facture = new Facture().findById(id);
+
+        if(null == facture) {
+            flash("error", "Ce produit n'existe pas dans la facture");
+            return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+        }else {
+            return ok(facture_proforma_produit.render(facture));
+        }
+    }
+
+    @Transactional
+    public Result updateProduit(String referenceFactureProforma, Long id) {
+        Form<Facture> form = formFactory.form(Facture.class).bindFromRequest();
+        if (form.hasErrors()) {
+            flash("error", "Veuillez vérifier les données saisies");
+            return redirect(controllers.routes.FactureController.editProduit(referenceFactureProforma, id));
+        } else {
+            Facture facture = form.get();
+            String result = facture.updateProduit(facture);
+            if (result != null) {
+                flash("error", "Erreur de mise à jour");
+                return redirect(controllers.routes.FactureController.editProduit(referenceFactureProforma, id));
+            } else {
+                flash("success", "Le produit a été modifié");
+                return redirect(controllers.routes.FactureController.readsFactureProforma(referenceFactureProforma));
+            }
+        }
     }
 
 }

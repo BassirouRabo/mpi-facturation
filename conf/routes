@@ -56,6 +56,8 @@ POST        /factures-proformas/:referenceFactureProforma                   cont
 POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
 POST        /factures-proformas/:referenceFactureProforma/updateEntete2        controllers.FactureController.updateEntete2(referenceFactureProforma: String)
 GET         /factures-proformas/:referenceFactureProforma/edit                 controllers.FactureController.readFactureProforma(referenceFactureProforma: String)
+GET         /factures-proformas/:referenceFactureProforma/:id/updateProduit     controllers.FactureController.editProduit(referenceFactureProforma: String, id: Long)
+POST        /factures-proformas/:referenceFactureProforma/:id/updateProduit     controllers.FactureController.updateProduit(referenceFactureProforma: String, id: Long)
 GET         /factures-proformas/:referenceFactureProforma/:id/delete        controllers.FactureController.delete(referenceFactureProforma: String, id: Long)
 GET        /factures-proformas/:referenceFactureProforma/delete                                    controllers.FactureController.deleteFacture(referenceFactureProforma: String)
 GET        /factures-proformas/:referenceFactureProforma/create-facture-proforma-impression        controllers.FactureController.createFactureProformaImpression(referenceFactureProforma: String)

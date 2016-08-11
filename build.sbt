@@ -15,3 +15,4 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
 )
 PlayKeys.externalizeResources := false
+

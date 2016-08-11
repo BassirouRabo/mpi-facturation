@@ -10,6 +10,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.GenerateRandom;
+import utils.GetReference;
 import utils.Secured;
 import views.html.client;
 import views.html.clients;
@@ -56,7 +57,7 @@ public class ClientController extends Controller {
                 facturesDefinitives = new ArrayList<>();
             }
 
-            return ok(client.render(clientExiste, facturesProformas, bonsLivraisons, facturesDefinitives));
+            return ok(client.render(clientExiste, facturesProformas, bonsLivraisons, facturesDefinitives, new GetReference()));
         }
     }
 

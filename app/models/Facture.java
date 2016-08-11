@@ -69,6 +69,8 @@ public class Facture {
     private String validite;
     @Column(name = "remise")
     private Long remise;
+    @Column(name = "intitule")
+    private String intitule;
 
     @Column(name = "when_done")
     private Date whenDone;
@@ -102,7 +104,7 @@ public class Facture {
      * @param whenDone
      * @param whoDone
      */
-    public Facture(String referenceFactureProforma, String referenceFactureProformaImpression, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String sousCategorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, Date whenDone, String whoDone) {
+    public Facture(String referenceFactureProforma, String referenceFactureProformaImpression, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String sousCategorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, String intitule, Date whenDone, String whoDone) {
         this.referenceFactureProforma = referenceFactureProforma;
         this.referenceFactureProformaImpression = referenceFactureProformaImpression;
         this.referenceBonLivraison = referenceBonLivraison;
@@ -126,6 +128,7 @@ public class Facture {
         this.modePaiement = modePaiement;
         this.validite = validite;
         this.remise = remise;
+        this.intitule = intitule;
         this.whenDone = whenDone;
         this.whoDone = whoDone;
     }
@@ -504,6 +507,7 @@ public class Facture {
             facture.setReferenceFactureProforma(factureExiste.getReferenceFactureProforma());
             facture.setReferenceProduit(produit.getReference());
             facture.setRemise(facture.getRemise());
+            facture.setIntitule(facture.getIntitule());
             facture.setTelephone(factureExiste.getTelephone());
             facture.setValidite(factureExiste.getValidite());
             facture.setWhenDone(new Date());
@@ -622,6 +626,8 @@ public class Facture {
                 facture1.setTelephone(client.getTelephone());
                 facture1.setEmail(client.getEmail());
                 facture1.setInformation(client.getInformation());
+                facture1.setIntitule(facture.getIntitule());
+                facture1.setRemise(facture.getRemise());
 
                 result = update(facture1);
 
@@ -631,6 +637,36 @@ public class Facture {
             }
         }
         return null;
+    }
+
+    /**
+     * Mise à jour d'un produit
+     * @param facture
+     * @return
+     */
+    public String updateProduit(Facture facture) {
+        String result = null;
+
+        Facture factureExiste = findById(facture.getId());
+
+        if(null == factureExiste) {
+            return "aucun enregistrement correspondant";
+        } else {
+
+            factureExiste.setDesignation(facture.getDesignation());
+            factureExiste.setPrixVente(facture.getPrixVente());
+            factureExiste.setQuantite(facture.getQuantite());
+            factureExiste.setCaracteristique(facture.getCaracteristique());
+
+            try {
+                JPA.em().persist(factureExiste);
+            } catch (Exception e) {
+                result = e.toString();
+            }
+        }
+
+        return result;
+
     }
 
 
@@ -651,6 +687,7 @@ public class Facture {
             factureExiste.setModePaiement(facture.getModePaiement());
             factureExiste.setValidite(facture.getValidite());
             factureExiste.setRemise(facture.getRemise());
+            factureExiste.setIntitule(facture.getIntitule());
             try {
                 JPA.em().persist(factureExiste);
             } catch (Exception e) {
@@ -896,6 +933,14 @@ public class Facture {
 
     public void setRemise(Long remise) {
         this.remise = remise;
+    }
+
+    public String getIntitule() {
+        return intitule;
+    }
+
+    public void setIntitule(String intitule) {
+        this.intitule = intitule;
     }
 
     public Date getWhenDone() {

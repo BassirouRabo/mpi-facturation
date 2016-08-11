@@ -1,5 +1,5 @@
 @import java.util
-@(factures: util.List[Facture])
+@(factures: util.List[Facture], getReference: utils.GetReference)
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -118,6 +118,7 @@
                                         <thead>
                                             <tr class="active">
                                                 <th>Référence</th>
+                                                <th>Intitulé</th>
                                                 <th>Client</th>
                                                 <th>Date</th>
                                                 <th class="text-nowrap">Imprimer</th>
@@ -126,7 +127,8 @@
                                         <tbody>
                                         @for(facture <- factures) {
                                             <tr>
-                                                <td>@facture.getReferenceBonLivraison</td>
+                                                <td>@getReference.getType(facture.getReferenceBonLivraison) @getReference.getNumero(facture.getReferenceBonLivraison) @getReference.getMois(facture.getReferenceBonLivraison)  @getReference.getAnnee(facture.getReferenceBonLivraison)</td>
+                                                <th>@facture.getIntitule</th>
                                                 <td>@facture.getNom</td>
                                                 <td>
                                                 @if(facture.getWhenDone != null) {

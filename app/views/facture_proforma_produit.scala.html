@@ -1,5 +1,4 @@
-@import java.util
-@(factures: util.List[Facture], getReference: utils.GetReference)
+@(facture : Facture)
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="@routes.Assets.versioned("images/favicon.png")">
-        <title>MPI | Facture Proforma</title>
+        <title>MPI | Utilisateurs</title>
             <!-- Bootstrap Core CSS -->
         <link href="@routes.Assets.versioned("bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
             <!-- Menu CSS -->
@@ -37,7 +36,7 @@
                 <!-- Top Navigation -->
             <nav class="navbar navbar-default navbar-static-top m-b-0">
                 <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-                    <div class="top-left-part"><a class="logo" href="/"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
+                    <div class="top-left-part"><a class="logo" href="index.html"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
                     <ul class="nav navbar-top-links navbar-left hidden-xs">
                         <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
                     </ul>
@@ -51,7 +50,6 @@
                     <ul class="nav" id="side-menu">
                         <li class="nav-small-cap m-t-10">--- Main Menu</li>
 
-
                         <li> <a href="/categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Catégorie</span></a></li>
                         <li> <a href="/sous-categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
@@ -59,11 +57,11 @@
 
                         <li> <a href="/produits" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Produits</span></a></li>
-                        <li> <a href="/clients" class="waves-effect"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/clients" class="waves-effect active"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Clients</span></a></li>
 
                         <li class="nav-small-cap m-t-10">--- Factures</li>
-                        <li> <a href="/factures-proformas" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
+                        <li> <a href="/factures-proformas" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Proforma </span></a></li>
                         <li> <a href="/bons-livraisons" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
                             Bon de livraison </span></a></li>
@@ -85,7 +83,7 @@
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">Toutes les factures proforma</h4>
+                            <h4 class="page-title">Modifier un compte client</h4>
                         </div>
                     </div>
 
@@ -108,61 +106,42 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="white-box">
-                                <input type="search" class="light-table-filter form-control" data-table="order-table" placeholder="Recherche">
-                            </div>
-                        </div>
-                    </div>
+                                <h3 class="box-title m-b-0">Modifier le produit de la commande</h3>
+                                <form class="form-horizontal" method="post" action="/factures-proformas/@facture.getReferenceFactureProforma/@facture.getId/updateProduit">
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="white-box">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered order-table">
-                                        <thead>
-                                            <tr class="active">
-                                                <th>Référence</th>
-                                                <th>Intitulé</th>
-                                                <th>Client</th>
-                                                <th>Date</th>
-                                                <th>Détail</th>
-                                                <th>Supprimer</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @for(facture <- factures) {
-                                            <tr>
-                                                <td>@getReference.getType(facture.getReferenceFactureProforma) @getReference.getNumero(facture.getReferenceFactureProforma) @getReference.getMois(facture.getReferenceFactureProforma)  @getReference.getAnnee(facture.getReferenceFactureProforma)</td>
-                                                <th>@facture.getIntitule</th>
-                                                <td>
-                                                @if(facture.getNom == null) {
-                                                    -
-                                                } else {
-                                                    @facture.getNom
-                                                }
-                                                </td>
-                                                <td>
-                                                @if(facture.getWhenDone != null) {
-                                                    @facture.getWhenDone.format("dd-MM-yyyy")
-                                                }
-                                                </td>
-                                                <td class="text-nowrap">
-                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil"></i> </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/delete" class="btn btn-danger btn-outline" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <span><i class="fa fa-close"></i> </span> </a>
-                                                </td>
-                                            </tr>
-                                        }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input type="text" name="designation" class="form-control" value="@facture.getDesignation" required="required">
+                                        </div>
+                                    </div>
 
-                    <div class="row">
-                        <div class="col-lg-2 col-sm-4 col-xs-12">
-                            <a href="/factures/initialisation" class="btn btn-block btn-danger">+ Nouvelle facture</a>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input type="number" name="prixVente" class="form-control" value="@facture.getPrixVente" required="required">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input name="quantite" type="number" class="form-control" value="@facture.getQuantite" required="required">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <textarea name="caracteristique" class="form-control" rows="5">@facture.getCaracteristique</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-2">
+                                            <input type="hidden" name="id" value="@facture.getId">
+                                            <button type="submit" class="btn btn-block btn-default">Modifier</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
                         </div>
                     </div>
 
@@ -173,8 +152,6 @@
             </div>
         </div>
 
-            <!-- Fitre -->
-        <script src="@routes.Assets.versioned("js/filtre.js")"></script>
             <!-- jQuery -->
         <script src="@routes.Assets.versioned("bower_components/jquery/dist/jquery.min.js")"></script>
             <!-- Bootstrap Core JavaScript -->
