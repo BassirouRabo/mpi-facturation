@@ -1,5 +1,6 @@
 @import java.util
-@(facture: Facture, clients: util.List[Client])
+@(facture: Facture, commandes: util.List[Commande], produits: util.List[Produit], clients: util.List[Client])
+
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -9,7 +10,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="@routes.Assets.versioned("images/favicon.png")">
-        <title>MPI | Facture proforma</title>
+        <title>MPI | Facture Proforma</title>
             <!-- Bootstrap Core CSS -->
         <link href="@routes.Assets.versioned("bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
             <!-- Menu CSS -->
@@ -33,55 +34,31 @@
             <div class="cssload-speeding-wheel"></div>
         </div>
         <div id="wrapper">
-                <!-- Top Navigation -->
+
             <nav class="navbar navbar-default navbar-static-top m-b-0">
                 <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-                    <div class="top-left-part"><a class="logo" href="index.html"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
+                    <div class="top-left-part"><a class="logo" href="/"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
                     <ul class="nav navbar-top-links navbar-left hidden-xs">
                         <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
                     </ul>
                 </div>
             </nav>
 
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse slimscrollsidebar">
-
-                    <ul class="nav" id="side-menu">
-                        <li class="nav-small-cap m-t-10">--- Main Menu</li>
-
-                        <li> <a href="/categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Catégorie</span></a></li>
-                        <li> <a href="/sous-categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Sous Catégorie</span></a></li>
-
-                        <li> <a href="/produits" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Produits</span></a></li>
-                        <li> <a href="/clients" class="waves-effect"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Clients</span></a></li>
-
-                        <li class="nav-small-cap m-t-10">--- Factures</li>
-                        <li> <a href="/factures-proformas" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Proforma </span></a></li>
-                        <li> <a href="/bons-livraisons" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Bon de livraison </span></a></li>
-                        <li> <a href="/factures-definitives" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Définitive </span></a></li>
-
-                        <li class="nav-small-cap m-t-10">--- Paramètres</li>
-                        <li> <a href="/utilisateurs" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Utilisateurs </span></a></li>
-                        <li><a href="/deconnexion" class="waves-effect"><i class="icon-logout fa-fw"></i> <span class="hide-menu">
-                            Log out</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+           @menu()
 
             <div id="page-wrapper">
+
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">Modification d'une catégorie</h4>
+                            <h4 class="page-title">
+                                Facture proforma N° : <small>@facture.getReferenceFactureProforma</small> <br>
+                                Date :
+                                @if(facture.getWhenDone != null) {
+                                    <small>@facture.getWhenDone.format("dd-MM-yyyy")</small>
+                                }
+                            </h4>
+
                         </div>
                     </div>
 
@@ -101,80 +78,256 @@
                         </div>
                     </div>
 
+                    @if(facture.getClient == null) {
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="white-box">
+                                    <h3 class="box-title m-b-0">Veuillez remplir les champs ci-après</h3>
+                                    <form class="form-horizontal" method="post" action="/factures/@facture.getId/update">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <input name="intitule" type="text" class="form-control" placeholder="Intitulé de la facture" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <select class="form-control" name="client.id">
+                                                @for(client <- clients) {
+                                                    <option value="@client.getId">@client.getNom</option>
+                                                }
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <input name="delaiLivraison" type="text" class="form-control" placeholder="Délai de livraison" required="required">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <input name="garantie" type="text" class="form-control" placeholder="Garantie" required="required">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <input name="modePaiement" type="text" class="form-control" placeholder="Mode de paiement" required="required">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <input name="validite" type="text" class="form-control" placeholder="Validité" required="required">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <input name="remise" type="number" min="0" max="100" class="form-control" placeholder="Remise" >
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-2">
+                                                <input type="hidden" name="id" value="@facture.getId">
+                                                <input type="hidden" name="referenceFactureProforma" value="@facture.getReferenceFactureProforma">
+                                                <button type="submit" class="btn btn-block btn-default">Valider</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="white-box">
+
+                                @if(facture.getClient != null) {
+                                    <ul class="nav customtab nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#client" aria-controls="client" role="tab" data-toggle="tab" aria-expanded="true"><span class="visible-xs"><i class="ti-home"></i></span><span class="hidden-xs">
+                                            Client </span></a></li>
+                                        <li role="presentation" class=""><a href="#commande" aria-controls="commande" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="ti-user"></i></span> <span class="hidden-xs">
+                                            Commande </span></a></li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade active in" id="client">
+                                            <dl>
+                                                <dt>NOM</dt>
+                                                <dd>@facture.getClient.getNom</dd><br>
+                                                <dt>TÉLÉPHONE</dt>
+                                                <dd>@facture.getClient.getTelephone</dd><br>
+                                                <dt>EMAIL</dt>
+                                                <dd>@facture.getClient.getEmail</dd><br>
+                                                <dt>ADRESSE</dt>
+                                                <dd>@facture.getClient.getAdresse</dd><br>
+                                                <dt>INFORMATION</dt>
+                                                <dd>@facture.getClient.getInformation</dd>
+                                            </dl>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade" id="commande">
+                                            <dl>
+                                                <dt>INTITULÉ</dt>
+                                                <dd>@facture.getIntitule</dd><br>
+                                                <dt>DÉLAI DE LIVRAISON</dt>
+                                                <dd>@facture.getDelaiLivraison</dd><br>
+                                                <dt>GARANTIE</dt>
+                                                <dd>@facture.getGarantie</dd><br>
+                                                <dt>MODE DE PAIEMENT</dt>
+                                                <dd>@facture.getModePaiement</dd><br>
+                                                <dt>VALIDITE DE L'OFFRE</dt>
+                                                <dd>@facture.getValidite</dd>
+                                            </dl>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if(commandes.size() > 0) {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive m-t-40">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>DÉSIGNATION</th>
+                                                            <th class="text-right">QUANTITÉ</th>
+                                                            <th class="text-right">PRIX</th>
+                                                            <th class="text-right">MONTANTS</th>
+                                                            <th class="text-right">ACTIONS</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @for(commande <- commandes) {
+                                                        <tr>
+                                                            <td><strong>@commande.getProduit.getDesignation</strong><br><br>@commande.getProduit.getCaracteristique</td>
+                                                            <td class="text-right"><span class="number">@commande.getQuantite</span></td>
+                                                            <td class="text-right"><span class="number">@commande.getPrix</span></td>
+                                                            <td class="text-right"><span class="number">@commande.getMontant</span></td>
+
+                                                            <td class="text-right text-nowrap">
+                                                                <a href="/factures/@facture.getId/commandes/@commande.getId" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil"></i> </a>
+                                                                <a href="/factures/@facture.getId/commandes/@commande.getId/delete" class="btn btn-danger btn-outline" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="pull-right m-t-30 text-right">
+                                                <p>Total HT: <span class="number">@facture.getHt</span></p>
+                                                @if(null != facture.getRemise) {
+                                                    <p>Remise (@facture.getRemise %) <span class="number">@facture.getRemiseMontant</span></p>
+                                                }
+                                                <p>Net à payer : <span class="number">@facture.getNet</span></p>
+                                                <p>TVA (19 %) : <span class="number">@facture.getTva </span></p>
+                                                <hr>
+                                                <h3><b>Total TTC :</b> <span class="number">@facture.getTtc</span></h3>
+
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <hr>
+                                           @* <div class="text-right">
+
+                                                <a href="/factures-proformas/@facture.getReferenceFactureProforma/edit" class="btn btn-default btn-outline" type="button"> <span><i class="fa fa-edit"></i>
+                                                    Modifier entête</span> </a>
+
+                                                @if(facture.getReferenceFactureProforma.equals("0")) {
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/create-facture-proforma-impression" class="btn btn-default btn-outline" type="button"> <span>
+                                                        Générer Facture proforma </span> </a>
+                                                } else {
+                                                    <a href="/rapport/download/FP/@facture.getReferenceFactureProforma" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>
+                                                        Facture proforma</span> </a>
+                                                }
+                                                @if(facture.getReferenceBonLivraison.equals("0")) {
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/create-bon-livraison" class="btn btn-default btn-outline" type="button"> <span>
+                                                        Générer Bon de livraison </span> </a>
+                                                } else {
+                                                    <a href="/rapport/download/BL/@facture.getReferenceBonLivraison" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>
+                                                        Bon de livraison</span> </a>
+                                                }
+                                                @if(facture.getReferenceFactureDefinitive.equals("0")) {
+                                                    <a href="/factures-proformas/@facture.getReferenceFactureProforma/create-facture-definitive" class="btn btn-default btn-outline" type="button"> <span>
+                                                        Générer Facture définitive </span> </a>
+                                                } else {
+                                                    <a href="/rapport/download/FD/@facture.getReferenceFactureDefinitive" target="_blank" class="btn btn-danger btn-outline" type="button"> <span><i class="fa fa-print"></i>
+                                                        Facture définitive</span> </a>
+                                                }
+                                            </div>*@
+                                        </div>
+                                    </div>
+                                }
+
+                                @if(facture.getClient != null) {
+                                    <a href="/factures/@facture.getId/edit" class="btn btn-default">Modifier entête</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="white-box">
-                                <h3 class="box-title m-b-0">
-                                    Modification de la facture N° @facture.getReferenceFactureProforma</h3>
-                                <form class="form-horizontal" method="post" action="/factures-proformas/@facture.getReferenceFactureProforma/updateEntete2">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <select class="form-control" name="referenceClient">
-                                            @for(client <- clients) {
-                                                @if(client.getReference.equals(facture.getReferenceClient)) {
-                                                    <option value="@client.getReference" selected="selected">@client.getNom</option>
-                                                } else {
-                                                    <option value="@client.getReference">@client.getNom</option>
-                                                }
-                                            }
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="intitule" type="text" class="form-control" value="@facture.getIntitule" required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="delaiLivraison" type="text" class="form-control" value="@facture.getDelaiLivraison" required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="garantie" type="text" class="form-control" value="@facture.getGarantie" required="required">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="modePaiement" type="text" class="form-control" value="@facture.getModePaiement" required="required">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="validite" type="text" class="form-control" value="@facture.getValidite" required="required">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input name="remise" type="number" min="0" class="form-control" value="@facture.getRemise" >
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-2">
-                                            <input type="hidden" name="id" value="@facture.getId">
-                                            <input type="hidden" name="referenceFactureProforma" value="@facture.getReferenceFactureProforma">
-                                            <button type="submit" class="btn btn-block btn-default">Modifier</button>
-                                        </div>
-                                    </div>
-
-                                </form>
-
+                                <h2><small>AJOUTER UN PRODUIT À LA COMMANDE</small></h2>
+                                <input type="search" class="light-table-filter form-control" data-table="order-table" placeholder="Recherche">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered order-table">
+                                        <thead>
+                                            <tr class="active">
+                                                <th>Catégorie</th>
+                                                <th>Sous catégorie</th>
+                                                <th>Désignation</th>
+                                                <th>Caractéristique</th>
+                                                <th>P.U</th>
+                                                <th>Prix Vente</th>
+                                                <th>Quantité</th>
+                                                <th class="text-nowrap">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @for(produit <- produits) {
+                                            <form method="post" action="/factures/@facture.getId/commandes">
+                                                <tr>
+                                                    <td>@produit.getSousCategorie.getCategorie.getNom</td>
+                                                    <td>@produit.getSousCategorie.getNom</td>
+                                                    <td>@produit.getDesignation</td>
+                                                    <td>@produit.getCaracteristique</td>
+                                                    <td><span class="number">@produit.getPrix</span></td>
+                                                    <td>
+                                                        <input name="prix" type="number" value="@produit.getPrix" min="1" class="form-control" required="required">
+                                                    </td>
+                                                    <td>
+                                                        <input name="quantite" type="number" min="1" class="form-control" value="1" required="required">
+                                                    </td>
+                                                    <td class="text-nowrap">
+                                                        <input type="hidden" name="produit.id" value="@produit.getId">
+                                                        <input type="hidden" name="facture.id" value="@facture.getId">
+                                                        <button type="submit" class="btn btn-danger btn-circle"><i class="fa fa-plus"></i> </button>
+                                                    </td>
+                                                </tr>
+                                            </form>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                 </div>
+
                 <footer class="footer text-center"> 2016 &copy;
                     Mell Plus Informatique. Designed by <a href="http://www.apkode.net">APKode.net</a> </footer>
             </div>
 
         </div>
 
+
+            <!-- Fitre -->
+        <script src="@routes.Assets.versioned("js/filtre.js")"></script>
             <!-- jQuery -->
         <script src="@routes.Assets.versioned("bower_components/jquery/dist/jquery.min.js")"></script>
             <!-- Bootstrap Core JavaScript -->
@@ -192,5 +345,12 @@
         <script src="@routes.Assets.versioned("bower_components/peity/jquery.peity.init.js")"></script>
             <!--Style Switcher -->
         <script src="@routes.Assets.versioned("bower_components/styleswitcher/jQuery.style.switcher.js")"></script>
+
+        <script src='@routes.Assets.versioned("js/jquery.number.js")' type="text/javascript"></script>
+        <script type="text/javascript">
+    $('span.number').number( true, 0, ',', ' ' );
+
+</script>
+
+
     </body>
-</html>

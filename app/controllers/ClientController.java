@@ -41,9 +41,9 @@ public class ClientController extends Controller {
         if (clientExiste == null) {
             return redirect(controllers.routes.ClientController.reads());
         } else {
-            List<Facture> facturesProformas = new Facture().findListFirstByFactureProformaByClient(clientExiste.getReference());
-            List<Facture> bonsLivraisons = new Facture().findListFirstByBonLivraisonByClient(clientExiste.getReference());
-            List<Facture> facturesDefinitives = new Facture().findListFirstByFactureDefinitiveByClient(clientExiste.getReference());
+            List<Facture> facturesProformas = new Facture().findListByFactureProformaByClient(clientExiste.getId());
+            List<Facture> bonsLivraisons = new Facture().findListByBonLivraisonByClient(clientExiste.getId());
+            List<Facture> facturesDefinitives = new Facture().findListByFactureDefinitiveByClient(clientExiste.getId());
 
             if(facturesProformas == null) {
                 facturesProformas = new ArrayList<>();

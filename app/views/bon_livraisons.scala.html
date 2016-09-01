@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="@routes.Assets.versioned("images/favicon.png")">
-        <title>MPI | Bon de commande</title>
+        <title>MPI | Facture Proforma</title>
             <!-- Bootstrap Core CSS -->
         <link href="@routes.Assets.versioned("bower_components/bootstrap/dist/css/bootstrap.min.css")" rel="stylesheet">
             <!-- Menu CSS -->
@@ -37,7 +37,7 @@
                 <!-- Top Navigation -->
             <nav class="navbar navbar-default navbar-static-top m-b-0">
                 <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-                    <div class="top-left-part"><a class="logo" href="index.html"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
+                    <div class="top-left-part"><a class="logo" href="/"><b><!--This is dark logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo.png")" alt="home" class="dark-logo" /> <!--This is light logo icon--> <img src="@routes.Assets.versioned("images/eliteadmin-logo-dark.png")" alt="home" class="light-logo" /></b> <span class="hidden-xs"><!--This is dark logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text.png")" alt="home" class="dark-logo" /> <!--This is light logo text--> <img src="@routes.Assets.versioned("images/eliteadmin-text-dark.png")" alt="home" class="light-logo" /></span></a></div>
                     <ul class="nav navbar-top-links navbar-left hidden-xs">
                         <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
                     </ul>
@@ -45,47 +45,14 @@
             </nav>
 
 
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse slimscrollsidebar">
-
-                    <ul class="nav" id="side-menu">
-                        <li class="nav-small-cap m-t-10">--- Main Menu</li>
-
-
-                        <li> <a href="/categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Catégorie</span></a></li>
-                        <li> <a href="/sous-categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Sous Catégorie</span></a></li>
-
-                        <li> <a href="/produits" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Produits</span></a></li>
-                        <li> <a href="/clients" class="waves-effect"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Clients</span></a></li>
-
-                        <li class="nav-small-cap m-t-10">--- Factures</li>
-                        <li> <a href="/factures-proformas" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Proforma </span></a></li>
-                        <li> <a href="/bons-livraisons" class="waves-effect active"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Bon de livraison </span></a></li>
-                        <li> <a href="/factures-definitives" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Définitive </span></a></li>
-
-                        <li class="nav-small-cap m-t-10">--- Paramètres</li>
-                        <li> <a href="/utilisateurs" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Utilisateurs </span></a></li>
-                        <li><a href="/deconnexion" class="waves-effect"><i class="icon-logout fa-fw"></i> <span class="hide-menu">
-                            Log out</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            @menu()
 
 
             <div id="page-wrapper">
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">Bon de commande N° </h4>
+                            <h4 class="page-title">Tous les bons de livraison</h4>
                         </div>
                     </div>
 
@@ -105,34 +72,44 @@
                         </div>
                     </div>
 
+
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="white-box">
+                                <input type="search" class="light-table-filter form-control" data-table="order-table" placeholder="Recherche">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered order-table">
                                         <thead>
                                             <tr class="active">
-                                                <th>Référence</th>
-                                                <th>Produit</th>
-                                                <th>Client</th>
-                                                <th>Date</th>
-                                                <th class="text-nowrap">Action</th>
+                                                <th>#</th>
+                                                <th>INTITULÉ</th>
+                                                <th>CLIENT</th>
+                                                <th>DATE</th>
+                                                <th>ACTIONS</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @for(facture <- factures) {
                                             <tr>
                                                 <td>@facture.getReferenceFactureProforma</td>
-                                                <td>@facture.getDesignation</td>
-                                                <td>@facture.getNom</td>
+                                                <th>@if(facture.getIntitule == null) {
+                                                    -
+                                                } else {
+                                                    @facture.getIntitule
+                                                }</th>
+                                                <td>@if(facture.getClient == null) {
+                                                    -
+                                                } else {
+                                                    @facture.getClient.getNom
+                                                }</td>
                                                 <td>
                                                 @if(facture.getWhenDone != null) {
                                                     @facture.getWhenDone.format("dd-MM-yyyy")
                                                 }
                                                 </td>
                                                 <td class="text-nowrap">
-                                                    <a href="/factures/@facture.getId" data-toggle="tooltip" data-original-title="Modifier"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                                    <a href="/factures/@facture.getId/delete" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <i class="fa fa-close text-danger"></i> </a>
+                                                    <a href="/factures/@facture.getId" class="btn btn-danger btn-outline" data-toggle="tooltip" data-original-title="Détail"> <i class="fa fa-pencil"></i> </a>
+                                                    <a href="/factures/@facture.getId/delete" class="btn btn-danger btn-outline" onclick="return window.confirm('Voulez vous supprimez ?');" data-toggle="tooltip" data-original-title="Supprimer"> <span><i class="fa fa-close"></i> </span> </a>
                                                 </td>
                                             </tr>
                                         }
@@ -150,6 +127,8 @@
             </div>
         </div>
 
+            <!-- Fitre -->
+        <script src="@routes.Assets.versioned("js/filtre.js")"></script>
             <!-- jQuery -->
         <script src="@routes.Assets.versioned("bower_components/jquery/dist/jquery.min.js")"></script>
             <!-- Bootstrap Core JavaScript -->

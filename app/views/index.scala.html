@@ -45,39 +45,7 @@
                 </div>
             </nav>
 
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse slimscrollsidebar">
-
-                    <ul class="nav" id="side-menu">
-                        <li class="nav-small-cap m-t-10">--- Main Menu</li>
-
-                        <li> <a href="/categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Catégorie</span></a></li>
-                        <li> <a href="/sous-categories" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Sous Catégorie</span></a></li>
-
-                        <li> <a href="/produits" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Produits</span></a></li>
-                        <li> <a href="/clients" class="waves-effect"><i data-icon="B" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Clients</span></a></li>
-
-                        <li class="nav-small-cap m-t-10">--- Factures</li>
-                        <li> <a href="/factures-proformas" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Proforma </span></a></li>
-                        <li> <a href="/bons-livraisons" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Bon de livraison </span></a></li>
-                        <li> <a href="/factures-definitives" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Définitive </span></a></li>
-
-                        <li class="nav-small-cap m-t-10">--- Paramètres</li>
-                        <li> <a href="/utilisateurs" class="waves-effect"><i data-icon="A" class="linea-icon linea-elaborate fa-fw"></i> <span class="hide-menu">
-                            Utilisateurs </span></a></li>
-                        <li><a href="/deconnexion" class="waves-effect"><i class="icon-logout fa-fw"></i> <span class="hide-menu">
-                            Log out</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            @menu()
 
             <div id="page-wrapper">
                 <div class="container-fluid">
@@ -132,29 +100,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                            <div class="white-box">
-                                <h3 class="box-title">Situation en temps réel</h3>
-                                <ul class="list-inline text-right">
-                                    <li>
-                                        <h5><i class="fa fa-circle m-r-5" style="color:#00bfc7 ;"></i>
-                                            Facture proforma</h5>
-                                    </li>
-                                    <li>
-                                        <h5><i class="fa fa-circle m-r-5" style="color:#fb9678 ;"></i>
-                                            Bon de commande</h5>
-                                    </li>
-                                    <li>
-                                        <h5><i class="fa fa-circle m-r-5" style="color:#9675ce ;"></i>
-                                            Factures définitive</h5>
-                                    </li>
-                                </ul>
-                                <div id="morris-area-chart" style="height:340px;"></div>
                             </div>
                         </div>
                     </div>

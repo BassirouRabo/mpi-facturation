@@ -103,7 +103,7 @@ public class ProduitController extends Controller {
         if (picture != null) {
             File file = picture.getFile();
 
-            File destination = new File("/opt/advinteck/tmp_pdf", "image.jpg");
+            File destination = new File("/opt/advinteck/image", "image.jpg");
             Files.move(Paths.get(file.getPath()), Paths.get(destination.getPath()));
 
             return ok("File uploade");

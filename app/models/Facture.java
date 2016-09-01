@@ -1,64 +1,28 @@
 package models;
 
+import play.data.format.Formats;
 import play.db.jpa.JPA;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Entity
 @Table(name = "facture")
 public class Facture {
+    @ManyToOne
+    private Client client;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "reference_facture_proforma", nullable = false)
     private String referenceFactureProforma;
-    @Column(name = "reference_facture_proforma_impression")
-    private String referenceFactureProformaImpression;
     @Column(name = "reference_bon_livraison")
     private String referenceBonLivraison;
     @Column(name = "reference_facture_definitive")
     private String referenceFactureDefinitive;
 
-
-    // Client
-    @Column(name = "reference_client")
-    private String referenceClient;
-    @Column(name = "nom")
-    private String nom;
-    @Column(name = "telephone")
-    private Long telephone;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "adresse")
-    private String adresse;
-    @Column(name = "information")
-    private String information;
-
-    // Produit
-    @Column(name = "reference_produit")
-    private String referenceProduit;
-    @Column(name = "categorie")
-    private String categorie;
-    @Column(name = "sous_categorie")
-    private String sousCategorie;
-    @Column(name = "designation")
-    private String designation;
-    @Column(name = "caracteristique")
-    private String caracteristique;
-    @Column(name = "prix")
-    private Long prix;
-    @Column(name = "prix_vente")
-    private Long prixVente;
-
-    // Add
-    @Column(name = "quantite")
-    private Long quantite;
     @Column(name = "delai_livraison")
     private String delaiLivraison;
     @Column(name = "garantie")
@@ -72,57 +36,47 @@ public class Facture {
     @Column(name = "intitule")
     private String intitule;
 
+    @Transient
+    private Long ht;
+    @Transient
+    private Long remiseMontant;
+    @Transient
+    private Long net;
+    @Transient
+    private Long tva;
+    @Transient
+    private Long ttc;
+
     @Column(name = "when_done")
+    @Formats.DateTime(pattern = "dd-MM-yyyy")
     private Date whenDone;
-    @Column(name = "who_done")
-    private String whoDone;
+
+
 
     /**
      * Constructeur avec paramètre
+     * @param client
      * @param referenceFactureProforma
-     * @param referenceFactureProformaImpression
      * @param referenceBonLivraison
      * @param referenceFactureDefinitive
-     * @param referenceClient
-     * @param nom
-     * @param telephone
-     * @param email
-     * @param adresse
-     * @param information
-     * @param referenceProduit
-     * @param categorie
-     * @param designation
-     * @param caracteristique
-     * @param prix
-     * @param prixVente
-     * @param quantite
      * @param delaiLivraison
      * @param garantie
      * @param modePaiement
      * @param validite
      * @param remise
+     * @param intitule
      * @param whenDone
-     * @param whoDone
+     * @param ht
+     * @param remiseMontant
+     * @param net
+     * @param tva
+     * @param ttc
      */
-    public Facture(String referenceFactureProforma, String referenceFactureProformaImpression, String referenceBonLivraison, String referenceFactureDefinitive, String referenceClient, String nom, Long telephone, String email, String adresse, String information, String referenceProduit, String categorie, String sousCategorie, String designation, String caracteristique, Long prix, Long prixVente, Long quantite, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, String intitule, Date whenDone, String whoDone) {
+    public Facture(Client client, String referenceFactureProforma, String referenceBonLivraison, String referenceFactureDefinitive, String delaiLivraison, String garantie, String modePaiement, String validite, Long remise, String intitule, Date whenDone, Long ht, Long remiseMontant, Long net, Long tva, Long ttc) {
+        this.client = client;
         this.referenceFactureProforma = referenceFactureProforma;
-        this.referenceFactureProformaImpression = referenceFactureProformaImpression;
         this.referenceBonLivraison = referenceBonLivraison;
         this.referenceFactureDefinitive = referenceFactureDefinitive;
-        this.referenceClient = referenceClient;
-        this.nom = nom;
-        this.telephone = telephone;
-        this.email = email;
-        this.adresse = adresse;
-        this.information = information;
-        this.referenceProduit = referenceProduit;
-        this.categorie = categorie;
-        this.sousCategorie = sousCategorie;
-        this.designation = designation;
-        this.caracteristique = caracteristique;
-        this.prix = prix;
-        this.prixVente = prixVente;
-        this.quantite = quantite;
         this.delaiLivraison = delaiLivraison;
         this.garantie = garantie;
         this.modePaiement = modePaiement;
@@ -130,7 +84,11 @@ public class Facture {
         this.remise = remise;
         this.intitule = intitule;
         this.whenDone = whenDone;
-        this.whoDone = whoDone;
+        this.ht = ht;
+        this.remiseMontant = remiseMontant;
+        this.net = net;
+        this.tva = tva;
+        this.ttc = ttc;
     }
 
     /**
@@ -167,291 +125,141 @@ public class Facture {
     }
 
     /**
-     * Retrouver list facture by FactureProforma
+     * Retrouver une facture by idClient
+     *
+     * @param idClient
      * @return
      */
-    private List<Facture> findListByFactureProforma() {
+    public List<Facture> findListByClient(Long idClient) {
         try {
-            return JPA.em().createQuery("select facture From Facture facture").getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.client.id = :idClient").setParameter("idClient", idClient).getResultList();
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * Retrouver list facture by BonLivraison
+     * Retrouver liste facture by referenceFactureProforma
      *
      * @return
      */
-    private List<Facture> findListByBonLivraison() {
+    public List<Facture> findListByFactureProforma() {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison != :referenceBonLivraison").setParameter("referenceBonLivraison", "0").getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureProforma <> null").getResultList();
         } catch (Exception e) {
             return null;
         }
     }
 
+
     /**
-     * Retrouver list facture by FactureDefinitive
+     * Retrouver liste facture by referenceBonLivraison
      *
      * @return
      */
-    private List<Facture> findListByFactureDefinitive() {
+    public List<Facture> findListByBonLivraison() {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive != :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", "0").getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison <> null").getResultList();
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * Retrouver list facture by FactureProforma and referenceClient
-     * @return
-     */
-    private List<Facture> findListByFactureProformaAndByClient(String referenceClient) {
-        try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceClient = :referenceClient").setParameter("referenceClient", referenceClient).getResultList();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Retrouver list facture by BonLivraison and referenceClient
+     * Retrouver liste facture by referenceFactureDefinitive
      *
      * @return
      */
-    private List<Facture> findListByBonLivraisonAndByClient(String referenceClient) {
+    public List<Facture> findListByFactureDefinitive() {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison != :referenceBonLivraison AND facture.referenceClient = :referenceClient").setParameter("referenceBonLivraison", "0").setParameter("referenceClient", referenceClient).getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive <> null").getResultList();
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * Retrouver list facture by FactureDefinitive and referenceClient
-     *
+     * Retrouvez liste facture proforma by client
+     * @param idClient
      * @return
      */
-    private List<Facture> findListByFactureDefinitiveAndByClient(String referenceClient) {
+    public List<Facture> findListByFactureProformaByClient(Long idClient) {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive != :referenceFactureDefinitive AND facture.referenceClient = :referenceClient").setParameter("referenceFactureDefinitive", "0").setParameter("referenceClient", referenceClient).getResultList();
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureProforma <> null AND  facture.client.id = :idClient").setParameter("idClient", idClient).getResultList();
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * Retrouver list facture by referenceFactureProforma
+     * Retrouvez liste facture definitive by client
+     * @param idClient
+     * @return
+     */
+    public List<Facture> findListByFactureDefinitiveByClient(Long idClient) {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive <> null AND  facture.client.id = :idClient").setParameter("idClient", idClient).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouvez liste bon livraison by client
+     * @param idClient
+     * @return
+     */
+    public List<Facture> findListByBonLivraisonByClient(Long idClient) {
+        try {
+            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison <> null AND  facture.client.id = :idClient").setParameter("idClient", idClient).getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrouver un facture by referenceFactureProforma
      *
      * @param referenceFactureProforma
      * @return
      */
-    public List<Facture> findListByReferenceFactureProforma(String referenceFactureProforma) {
+    public Facture findByReferenceFactureProforma(String referenceFactureProforma) {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureProforma = :referenceFactureProforma").setParameter("referenceFactureProforma", referenceFactureProforma).getResultList();
+            return (Facture) JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureProforma = :referenceFactureProforma").setParameter("referenceFactureProforma", referenceFactureProforma).getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
 
+
     /**
-     * Retrouver list facture by referenceBonLivraison
+     * Retrouver un facture by referenceBonLivraison
      *
      * @param referenceBonLivraison
      * @return
      */
-    public List<Facture> findListByReferenceBonLivraison(String referenceBonLivraison) {
+    public Facture findByReferenceBonLivraison(String referenceBonLivraison) {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison = :referenceBonLivraison").setParameter("referenceBonLivraison", referenceBonLivraison).getResultList();
+            return (Facture) JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceBonLivraison = :referenceBonLivraison").setParameter("referenceBonLivraison", referenceBonLivraison).getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * Retrouver list facture by referenceFactureDefinitive
+     * Retrouver un facture by referenceFactureDefinitive
      *
      * @param referenceFactureDefinitive
      * @return
      */
-    public List<Facture> findListByReferenceFactureDefinitive(String referenceFactureDefinitive) {
+    public Facture findByReferenceFactureDefinitive(String referenceFactureDefinitive) {
         try {
-            return JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive = :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", referenceFactureDefinitive).getResultList();
+            return (Facture) JPA.em().createQuery("select facture From Facture facture WHERE facture.referenceFactureDefinitive = :referenceFactureDefinitive").setParameter("referenceFactureDefinitive", referenceFactureDefinitive).getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
 
-    /**
-     * Retrouver la première facture by referenceFactureProforma
-     *
-     * @param referenceFactureProforma
-     * @return
-     */
-    public Facture findFirstByReferenceFactureProforma(String referenceFactureProforma) {
-        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
-        if (factures != null) {
-            return factures.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retrouver la première facture by referenceBonLivraison
-     *
-     * @param referenceBonLivraison
-     * @return
-     */
-    private Facture findFirstByReferenceBonLivraison(String referenceBonLivraison) {
-        List<Facture> factures = findListByReferenceBonLivraison(referenceBonLivraison);
-        if (factures != null) {
-            return factures.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retrouver la première facture by referenceFactureDefinitive
-     *
-     * @param referenceFactureDefinitive
-     * @return
-     */
-    private Facture findFirstByReferenceFactureDefinitive(String referenceFactureDefinitive) {
-        List<Facture> factures = findListByReferenceFactureDefinitive(referenceFactureDefinitive);
-        if (factures != null) {
-            return factures.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Liste des premières factures by findListFirstByFactureProforma
-     *
-     * @return
-     */
-    public List<Facture> findListFirstByFactureProforma() {
-        List<Facture> factureListOut = new ArrayList<>();
-        HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByFactureProforma();
-
-        if (factureList == null) {
-            return null;
-        } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureProforma(facture.getReferenceFactureProforma())).collect(Collectors.toList()));
-            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
-            return factureListOut;
-        }
-    }
-
-
-    /**
-     * Liste des premières factures by findListFirstByBonLivraison
-     *
-     * @return
-     */
-    public List<Facture> findListFirstByBonLivraison() {
-        List<Facture> factureListOut = new ArrayList<>();
-        HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByBonLivraison();
-
-        if (factureList == null) {
-            return null;
-        } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceBonLivraison(facture.getReferenceBonLivraison())).collect(Collectors.toList()));
-
-            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
-
-            return factureListOut;
-        }
-    }
-
-
-    /**
-     * Liste des premières factures by findListFirstByFactureDefinitive
-     *
-     * @return
-     */
-    public List<Facture> findListFirstByFactureDefinitive() {
-        List<Facture> factureListOut = new ArrayList<>();
-        HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByFactureDefinitive();
-
-        if (factureList == null) {
-            return null;
-        } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureDefinitive(facture.getReferenceFactureDefinitive())).collect(Collectors.toList()));
-
-            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
-
-            return factureListOut;
-        }
-    }
-
-    /**
-     *
-     * @param referenceClient
-     * @return
-     */
-    public List<Facture> findListFirstByFactureProformaByClient(String referenceClient) {
-        List<Facture> factureListOut = new ArrayList<>();
-        HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByFactureProformaAndByClient(referenceClient);
-
-        if (factureList == null) {
-            return null;
-        } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureProforma(facture.getReferenceFactureProforma())).collect(Collectors.toList()));
-            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
-            return factureListOut;
-        }
-    }
-
-    /**
-     *
-     * @param referenceClient
-     * @return
-     */
-    public List<Facture> findListFirstByBonLivraisonByClient(String referenceClient) {
-        List<Facture> factureListOut = new ArrayList<>();
-        HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByBonLivraisonAndByClient(referenceClient);
-
-        if (factureList == null) {
-            return null;
-        } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceBonLivraison(facture.getReferenceBonLivraison())).collect(Collectors.toList()));
-
-            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
-
-            return factureListOut;
-        }
-    }
-
-    /**
-     *
-     * @param referenceClient
-     * @return
-     */
-    public List<Facture> findListFirstByFactureDefinitiveByClient(String referenceClient) {
-        List<Facture> factureListOut = new ArrayList<>();
-        HashSet<Facture> factureHashSet = new HashSet<>();
-        List<Facture> factureList = findListByFactureDefinitiveAndByClient(referenceClient);
-
-        if (factureList == null) {
-            return null;
-        } else {
-            factureHashSet.addAll(factureList.stream().map(facture -> findFirstByReferenceFactureDefinitive(facture.getReferenceFactureDefinitive())).collect(Collectors.toList()));
-
-            factureListOut.addAll(factureHashSet.stream().collect(Collectors.toList()));
-
-            return factureListOut;
-        }
-    }
 
     /**
      * Créer une facture
@@ -460,261 +268,57 @@ public class Facture {
      * @return
      */
     public String create(Facture facture) {
-        String result = null;
-        try {
-            JPA.em().persist(facture);
-        } catch (Exception e) {
-            result = e.toString();
-        }
-        return result;
-    }
+        Facture factureExiste = findByReferenceFactureProforma(facture.getReferenceFactureProforma());
 
-    /**
-     * Ajout d'un produit à une commande
-     *
-     * @param referenceFactureProforma
-     * @param quantite
-     * @return
-     */
-    public String addCommande(String referenceFactureProforma, String referenceProduit, Long prixVente, Long quantite, String telephone) {
-        String result;
-        Facture facture = new Facture();
-        Facture factureExiste = findFirstByReferenceFactureProforma(referenceFactureProforma);
-        Produit produit = new Produit().findByReference(referenceProduit);
-
-
-        if (factureExiste == null || produit == null) {
-            return "Aucun enregistrement correspondant";
+        if (factureExiste != null) {
+            return "Cette facture existe";
         } else {
-            facture.setAdresse(factureExiste.getAdresse());
-            facture.setCaracteristique(produit.getCaracteristique());
-            facture.setCategorie(produit.getSousCategorie().getCategorie().getNom());
-            facture.setSousCategorie(produit.getSousCategorie().getNom());
-            facture.setDelaiLivraison(factureExiste.getDelaiLivraison());
-            facture.setDesignation(produit.getDesignation());
-            facture.setEmail(factureExiste.getEmail());
-            facture.setGarantie(factureExiste.getGarantie());
-            facture.setInformation(factureExiste.getInformation());
-            facture.setModePaiement(factureExiste.getModePaiement());
-            facture.setNom(factureExiste.getNom());
-            facture.setPrix(produit.getPrix());
-            facture.setPrixVente(prixVente);
-            facture.setQuantite(quantite);
-            facture.setReferenceFactureProformaImpression(factureExiste.getReferenceFactureProformaImpression());
-            facture.setReferenceBonLivraison(factureExiste.getReferenceBonLivraison());
-            facture.setReferenceClient(factureExiste.getReferenceClient());
-            facture.setReferenceFactureDefinitive(factureExiste.getReferenceFactureDefinitive());
-            facture.setReferenceFactureProforma(factureExiste.getReferenceFactureProforma());
-            facture.setReferenceProduit(produit.getReference());
-            facture.setRemise(facture.getRemise());
-            facture.setIntitule(facture.getIntitule());
-            facture.setTelephone(factureExiste.getTelephone());
-            facture.setValidite(factureExiste.getValidite());
-            facture.setWhenDone(new Date());
-            facture.setWhoDone(telephone);
-
-            result = create(facture);
-
-            if (result != null) {
-                return "Erreur d'enregistrement";
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     * @param referenceFactureProforma
-     * @return
-     */
-    public String createFactureProformaImpression(String referenceFactureProforma) {
-        String result;
-
-        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
-        for (Facture facture : factures) {
-            facture.setReferenceFactureProformaImpression(referenceFactureProforma);
-            result = facture.update(facture);
-
-            if (result != null) {
-                return result;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param referenceFactureProforma
-     * @return
-     */
-    public String createBonLivraison(String referenceFactureProforma, String referenceBonLivraison) {
-        String result;
-
-        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
-        for (Facture facture : factures) {
-            facture.setReferenceBonLivraison(referenceBonLivraison);
-            result = facture.update(facture);
-
-            if (result != null) {
-                return result;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param referenceFactureProforma
-     * @return
-     */
-    public String createFactureDefinitive(String referenceFactureProforma, String referenceFactureDefinitive) {
-        String result;
-
-        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
-        for (Facture facture : factures) {
-            facture.setReferenceFactureDefinitive(referenceFactureDefinitive);
-            result = facture.update(facture);
-
-            if (result != null) {
-                return result;
-            }
-        }
-        return null;
-    }
-
-
-
-    /**
-     * @param referenceFactureProforma
-     * @return
-     */
-    public String modification(String referenceFactureProforma) {
-        String result;
-
-        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
-        for (Facture facture : factures) {
-            result = facture.update(facture);
-
-            if (result != null) {
-                return result;
-            }
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param facture
-     * @return
-     */
-    public String updateEntete(Facture facture) {
-        String result;
-        List<Facture> factures = findListByReferenceFactureProforma(facture.getReferenceFactureProforma());
-        Client client = new Client().findByReference(facture.getReferenceClient());
-
-        if (factures == null || client == null) {
-            return "aucun enregistrement correspondant";
-        } else {
-            for (Facture facture1 : factures) {
-                facture1.setDelaiLivraison(facture.getDelaiLivraison());
-                facture1.setGarantie(facture.getGarantie());
-                facture1.setModePaiement(facture.getModePaiement());
-                facture1.setValidite(facture.getValidite());
-                facture1.setGarantie(facture.getGarantie());
-                facture1.setReferenceClient(client.getReference());
-                facture1.setNom(client.getNom());
-                facture1.setAdresse(client.getAdresse());
-                facture1.setTelephone(client.getTelephone());
-                facture1.setEmail(client.getEmail());
-                facture1.setInformation(client.getInformation());
-                facture1.setIntitule(facture.getIntitule());
-                facture1.setRemise(facture.getRemise());
-
-                result = update(facture1);
-
-                if (result != null) {
-                    return "Erreur d'enregistrement";
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Mise à jour d'un produit
-     * @param facture
-     * @return
-     */
-    public String updateProduit(Facture facture) {
-        String result = null;
-
-        Facture factureExiste = findById(facture.getId());
-
-        if(null == factureExiste) {
-            return "aucun enregistrement correspondant";
-        } else {
-
-            factureExiste.setDesignation(facture.getDesignation());
-            factureExiste.setPrixVente(facture.getPrixVente());
-            factureExiste.setQuantite(facture.getQuantite());
-            factureExiste.setCaracteristique(facture.getCaracteristique());
-
+            String result = null;
             try {
-                JPA.em().persist(factureExiste);
+                facture.setWhenDone(new Date());
+                JPA.em().persist(facture);
+                JPA.em().flush();
             } catch (Exception e) {
                 result = e.toString();
             }
+            return result;
         }
-
-        return result;
 
     }
 
-
     /**
+     * Modifier une facture
+     *
      * @param facture
      * @return
      */
-    private String update(Facture facture) {
+    public String update(Facture facture) {
         String result = null;
 
         Facture factureExiste = findById(facture.getId());
+
         if (factureExiste == null) {
             return "aucun enregistrement correspondant";
         } else {
+            factureExiste.setClient(facture.getClient());
+            factureExiste.setReferenceFactureProforma(facture.getReferenceFactureProforma());
+            factureExiste.setReferenceBonLivraison(facture.getReferenceBonLivraison());
+            factureExiste.setReferenceFactureDefinitive(facture.getReferenceFactureDefinitive());
 
             factureExiste.setDelaiLivraison(facture.getDelaiLivraison());
+            factureExiste.setRemise(facture.getRemise());
             factureExiste.setGarantie(facture.getGarantie());
             factureExiste.setModePaiement(facture.getModePaiement());
+            factureExiste.setNet(facture.getNet());
             factureExiste.setValidite(facture.getValidite());
-            factureExiste.setRemise(facture.getRemise());
             factureExiste.setIntitule(facture.getIntitule());
             try {
                 JPA.em().persist(factureExiste);
             } catch (Exception e) {
                 result = e.toString();
             }
+            return result;
         }
-        return result;
-    }
-
-    /**
-     * Supprimer une liste de facture en fonction d'une referenceFactureProforma
-     *
-     * @return
-     */
-    public String deleteFacture(String referenceFactureProforma) {
-        String result;
-
-        List<Facture> factures = findListByReferenceFactureProforma(referenceFactureProforma);
-
-        for (Facture facture : factures) {
-            result = facture.delete(facture.getId());
-
-            if (result != null) {
-                return result;
-            }
-        }
-        return null;
     }
 
     /**
@@ -731,6 +335,19 @@ public class Facture {
         if (factureExiste == null) {
             return "aucun enregistrement correspondant";
         } else {
+
+            List<Commande> commandeList = new Commande().findListByFacture(factureExiste.getId());
+
+            String resultCommande;
+
+            for(Commande commande : commandeList) {
+                resultCommande = new Commande().delete(commande.getId());
+
+                if(null != resultCommande) {
+                    return "Erreur de suppression de commandes";
+                }
+            }
+
             try {
                 JPA.em().remove(factureExiste);
                 JPA.em().flush();
@@ -741,7 +358,13 @@ public class Facture {
         }
     }
 
+    public Client getClient() {
+        return client;
+    }
 
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
     public Long getId() {
         return id;
@@ -759,14 +382,6 @@ public class Facture {
         this.referenceFactureProforma = referenceFactureProforma;
     }
 
-    public String getReferenceFactureProformaImpression() {
-        return referenceFactureProformaImpression;
-    }
-
-    public void setReferenceFactureProformaImpression(String referenceFactureProformaImpression) {
-        this.referenceFactureProformaImpression = referenceFactureProformaImpression;
-    }
-
     public String getReferenceBonLivraison() {
         return referenceBonLivraison;
     }
@@ -781,118 +396,6 @@ public class Facture {
 
     public void setReferenceFactureDefinitive(String referenceFactureDefinitive) {
         this.referenceFactureDefinitive = referenceFactureDefinitive;
-    }
-
-    public String getReferenceClient() {
-        return referenceClient;
-    }
-
-    public void setReferenceClient(String referenceClient) {
-        this.referenceClient = referenceClient;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public Long getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(Long telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public void setInformation(String information) {
-        this.information = information;
-    }
-
-    public String getReferenceProduit() {
-        return referenceProduit;
-    }
-
-    public void setReferenceProduit(String referenceProduit) {
-        this.referenceProduit = referenceProduit;
-    }
-
-    public String getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
-    }
-
-    public String getSousCategorie() {
-        return sousCategorie;
-    }
-
-    public void setSousCategorie(String sousCategorie) {
-        this.sousCategorie = sousCategorie;
-    }
-
-    public String getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
-
-    public String getCaracteristique() {
-        return caracteristique;
-    }
-
-    public void setCaracteristique(String caracteristique) {
-        this.caracteristique = caracteristique;
-    }
-
-    public Long getPrix() {
-        return prix;
-    }
-
-    public void setPrix(Long prix) {
-        this.prix = prix;
-    }
-
-    public Long getPrixVente() {
-        return prixVente;
-    }
-
-    public void setPrixVente(Long prixVente) {
-        this.prixVente = prixVente;
-    }
-
-    public Long getQuantite() {
-        return quantite;
-    }
-
-    public void setQuantite(Long quantite) {
-        this.quantite = quantite;
     }
 
     public String getDelaiLivraison() {
@@ -943,19 +446,51 @@ public class Facture {
         this.intitule = intitule;
     }
 
+    public Long getHt() {
+        return ht;
+    }
+
+    public void setHt(Long ht) {
+        this.ht = ht;
+    }
+
+    public Long getRemiseMontant() {
+        return remiseMontant;
+    }
+
+    public void setRemiseMontant(Long remiseMontant) {
+        this.remiseMontant = remiseMontant;
+    }
+
+    public Long getNet() {
+        return net;
+    }
+
+    public void setNet(Long net) {
+        this.net = net;
+    }
+
+    public Long getTva() {
+        return tva;
+    }
+
+    public void setTva(Long tva) {
+        this.tva = tva;
+    }
+
+    public Long getTtc() {
+        return ttc;
+    }
+
+    public void setTtc(Long ttc) {
+        this.ttc = ttc;
+    }
+
     public Date getWhenDone() {
         return whenDone;
     }
 
     public void setWhenDone(Date whenDone) {
         this.whenDone = whenDone;
-    }
-
-    public String getWhoDone() {
-        return whoDone;
-    }
-
-    public void setWhoDone(String whoDone) {
-        this.whoDone = whoDone;
     }
 }

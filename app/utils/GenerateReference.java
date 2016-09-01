@@ -77,7 +77,7 @@ public class GenerateReference {
         String mois = getMois();
         String annee = getAnnee();
 
-        List<Facture> factures = new Facture().findListFirstByFactureProforma();
+        List<Facture> factures = new Facture().findListByFactureProforma();
         List<FacturePojo> facturePojos = new ArrayList<>();
         List<FacturePojo> facturePojosExiste = new ArrayList<>();
 
@@ -129,7 +129,7 @@ public class GenerateReference {
         String mois = getMois();
         String annee = getAnnee();
 
-        List<Facture> factures = new Facture().findListFirstByBonLivraison();
+        List<Facture> factures = new Facture().findListByBonLivraison();
         List<FacturePojo> facturePojos = new ArrayList<>();
         List<FacturePojo> facturePojosExiste = new ArrayList<>();
 
@@ -181,7 +181,7 @@ public class GenerateReference {
         String mois = getMois();
         String annee = getAnnee();
 
-        List<Facture> factures = new Facture().findListFirstByFactureDefinitive();
+        List<Facture> factures = new Facture().findListByFactureDefinitive();
         List<FacturePojo> facturePojos = new ArrayList<>();
         List<FacturePojo> facturePojosExiste = new ArrayList<>();
 

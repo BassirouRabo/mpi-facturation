@@ -39,9 +39,15 @@ public class PdfPrinter extends AbstractReportGenerator {
      */
     public static void printer(String codeRapport, String reference, Rapport rapport) throws IllegalArgumentException, IOException, ReportProcessingException {
 
+        System.out.println("reference"+reference);
+
         PdfPrinter.URL = template + rapport.getTemplate();
         PdfPrinter.QUERY_NAME = rapport.getLibelleRapport();
-        PdfPrinter.QUERY = rapport.getTmpQuery();
+        //  PdfPrinter.QUERY = rapport.getTmpQuery();
+        String requete = rapport.getTmpQuery();
+        PdfPrinter.QUERY = requete.replace("${reference}", reference);
+
+        System.out.println(" PdfPrinter.QUERY "+ PdfPrinter.QUERY);
 
         PdfPrinter printer = new PdfPrinter();
 

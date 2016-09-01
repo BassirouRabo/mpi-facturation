@@ -7,9 +7,8 @@ GET         /connexion          controllers.HomeController.connexion()
 GET         /deconnexion        controllers.HomeController.deconnexion()
 GET         /inscription        controllers.HomeController.inscription()
 POST        /connexion          controllers.HomeController.authentification()
-GET         /error-client                                                      controllers.HomeController.errorClient()
-GET         /error-server                                                      controllers.HomeController.errorServer(message: String)
-
+GET         /error-client       controllers.HomeController.errorClient()
+GET         /error-server       controllers.HomeController.errorServer(message: String)
 
 # Categorie
 GET         /categories                     controllers.CategorieController.reads()
@@ -39,7 +38,6 @@ GET         /produits/:id                   controllers.ProduitController.read(i
 POST        /produits/:id/update            controllers.ProduitController.update(id: Long)
 GET         /produits/:id/delete            controllers.ProduitController.delete(id: Long)
 
-
 # Utilisateur
 GET         /utilisateurs                   controllers.UtilisateurController.reads()
 POST        /utilisateurs                   controllers.UtilisateurController.create()
@@ -48,31 +46,21 @@ POST        /utilisateurs/:id/update        controllers.UtilisateurController.up
 GET         /utilisateurs/:id/delete        controllers.UtilisateurController.delete(id: Long)
 
 # Facture
-GET         /factures/initialisation                                          controllers.FactureController.initialisation()
+GET         /facture-proformas                         controllers.FactureController.readsFactureProforma()
+GET         /bon-livraisons                            controllers.FactureController.readsBonLivraison()
+GET         /facture-definitives                       controllers.FactureController.readsFactureDefinitive()
 
-GET         /factures-proformas                                               controllers.FactureController.readsFirstFactureProforma()
-GET         /factures-proformas/:referenceFactureProforma                     controllers.FactureController.readsFactureProforma(referenceFactureProforma: String)
-POST        /factures-proformas/:referenceFactureProforma                   controllers.FactureController.create(referenceFactureProforma: String)
-POST        /factures-proformas/:referenceFactureProforma/updateEntete        controllers.FactureController.updateEntete(referenceFactureProforma: String)
-POST        /factures-proformas/:referenceFactureProforma/updateEntete2        controllers.FactureController.updateEntete2(referenceFactureProforma: String)
-GET         /factures-proformas/:referenceFactureProforma/edit                 controllers.FactureController.readFactureProforma(referenceFactureProforma: String)
-GET         /factures-proformas/:referenceFactureProforma/:id/updateProduit     controllers.FactureController.editProduit(referenceFactureProforma: String, id: Long)
-POST        /factures-proformas/:referenceFactureProforma/:id/updateProduit     controllers.FactureController.updateProduit(referenceFactureProforma: String, id: Long)
-GET         /factures-proformas/:referenceFactureProforma/:id/delete        controllers.FactureController.delete(referenceFactureProforma: String, id: Long)
-GET        /factures-proformas/:referenceFactureProforma/delete                                    controllers.FactureController.deleteFacture(referenceFactureProforma: String)
-GET        /factures-proformas/:referenceFactureProforma/create-facture-proforma-impression        controllers.FactureController.createFactureProformaImpression(referenceFactureProforma: String)
-GET         /factures-proformas/:referenceFactureProforma/create-bon-livraison           controllers.FactureController.createBonLivraison(referenceFactureProforma: String)
-GET         /factures-proformas/:referenceFactureProforma/create-facture-definitive           controllers.FactureController.createFactureDefinitive(referenceFactureProforma: String)
+GET         /factures/create                                    controllers.FactureController.create()
+GET         /factures/:id                                       controllers.FactureController.read(id: Long)
+GET         /factures/:id/edit                                  controllers.FactureController.edit(id: Long)
+POST        /factures/:id/update                                controllers.FactureController.update(id: Long)
+GET         /factures/:id/delete                                controllers.FactureController.delete(id: Long)
 
-GET         /bons-livraisons                                                   controllers.FactureController.readsFirstBonLivraison()
-GET         /bons-livraisons/:referenceBonLivraison                             controllers.FactureController.readsBonLivraison(referenceBonLivraison: String)
-
-GET         /factures-definitives                                             controllers.FactureController.readsFirstFactureDefinitive()
-GET         /factures-definitives/:referenceFactureDefinitive                 controllers.FactureController.readsFactureDefinitive(referenceFactureDefinitive: String)
-
-GET         /clients/:referenceClient/factures-proformas                        controllers.FactureController.readsFirstFactureProformaByClient(referenceClient: String)
-GET         /clients/:referenceClient/bons-commandes                            controllers.FactureController.readsFirstBonLivraisonByClient(referenceClient: String)
-GET         /clients/:referenceClient/factures-definitives                      controllers.FactureController.readsFirstFactureDefinitiveByClient(referenceClient: String)
+# Commande
+POST        /factures/:idParent/commandes                        controllers.CommandeController.create(idParent: Long)
+GET         /factures/:idParent/commandes/:id                    controllers.CommandeController.read(idParent: Long, id: Long)
+POST        /factures/:idParent/commandes/:id/update             controllers.CommandeController.update(idParent: Long, id: Long)
+GET         /factures/:idParent/commandes/:id/delete             controllers.CommandeController.delete(idParent: Long, id: Long)
 
 
 # Rapport
